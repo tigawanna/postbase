@@ -10,9 +10,14 @@ import {
 } from "@/components/shadcn/ui/dialog";
 import { Input } from "@/components/shadcn/ui/input";
 import { Label } from "@/components/shadcn/ui/label";
-import { Link } from "rakkasjs";
+import { Link, usePageContext } from "rakkasjs";
 import { useState } from "react";
 import { UserCombobox } from "./UserCombobox";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/shadcn/ui/alert";
 
 interface PickDatabaseDialogProps {
   datname: string;
@@ -38,6 +43,11 @@ export function PickDatabaseDialog({
       [e.target.id]: e.target.value,
     });
   }
+  const page_ctx = usePageContext()
+  const db_page_url = new URL(page_ctx.url)
+  db_page_url.pathname = `/pg/db/${datname}`
+  db_page_url.searchParams.set('name',input.user)
+  db_page_url.searchParams.set('password',input.password)
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -46,7 +56,15 @@ export function PickDatabaseDialog({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{datname}</DialogTitle>
-          <DialogDescription>Login to your database</DialogDescription>
+          <DialogDescription>
+         
+            <Alert>
+              <AlertTitle>Hint</AlertTitle>
+              <AlertDescription>
+                password default is usually 'postgres'
+              </AlertDescription>
+            </Alert>
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col justify-center  gap-4 py-4">
           <div className="flex flex-col  gap-4">
@@ -91,7 +109,7 @@ export function PickDatabaseDialog({
         </div>
         <DialogFooter>
           <Link
-            href={`/pg/${datname}`}
+            href={db_page_url.toString()}
             className=" rounded-lg px-5 py-1.5 bg-base-200 hover:bg-base-300 hover:text-sky-400 "
           >
             continue
