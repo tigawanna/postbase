@@ -1,7 +1,5 @@
-import { Card } from "@/components/shadcn/ui/card";
 import postgres from "postgres";
-
-import { Link, useSSQ } from "rakkasjs";
+import { useSSQ } from "rakkasjs";
 import { PickDatabaseDialog } from "./PickDatabaseDialog";
 interface DatabasesProps {}
 
@@ -39,18 +37,13 @@ export function Databases({}: DatabasesProps) {
           {dbs &&
             dbs?.map((db: { datname: string }) => {
               return (
-                <li className=" bg-base-200 min-w-[30%] flex flex-col justify-center
-                 flex-grow py-0.5 px-2 gap-5 rounded-lg">
-                  <div className="w-full text-2xl font-bold text-center">{db.datname}</div>
-                  <PickDatabaseDialog datname={db.datname} users={users}/>
+                <li
+                  key={db.datname}
+                  className=" min-w-[30%] flex  justify-center items-center
+                 flex-grow rounded-lg"
+                >
+                  <PickDatabaseDialog datname={db.datname} users={users} />
                 </li>
-                // <Link
-                //   href={`/pg/${db.datname}`}
-                //   className="p-5 flex-grow  text-2xl bg-base-200 rounded-lg hover:bg-base-300 hover:text-sky-400 "
-                //   key={db.datname}
-                // >
-                //   {db.datname}
-                // </Link>
               );
             })}
         </ul>

@@ -5,13 +5,10 @@ import {
   PageContext,
   useLocation,
 } from "rakkasjs";
-
-
 import "./index.css";
 import React from "react";
 import { Sidebar } from "@/components/navigation/bars/sidebar";
-import { Toaster } from "@/components/shadcn/ui/sonner";
-
+import Toaster from "@/components/wrappers/DefaltExportedToaster";
 
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
@@ -36,7 +33,9 @@ function Layout({ children }: LayoutProps) {
           {children}
         </div>
       </div>
-      <Toaster />
+      <ClientSuspense fallback={<div></div>}>
+        <Toaster />
+      </ClientSuspense>
       {import.meta.env.DEV && <ReactQueryDevtoolsProduction />}
     </div>
   );
