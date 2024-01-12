@@ -21,7 +21,6 @@ import { ChevronRightSquare, Loader } from "lucide-react";
 import postgres from "postgres";
 import { Button } from "@/components/shadcn/ui/button";
 import { isString } from "@/utils/helpers/string";
-import { toast } from "sonner";
 import { hotToast } from "@/utils/helpers/toast";
 
 interface PickDatabaseDialogProps {
@@ -90,7 +89,8 @@ export function PickDatabaseDialog({
         description: mutation.data?.data ?? "",
         type: "success",
       });
-        db_page_url.pathname = `/pg/db/${datname}`;
+        db_page_url.pathname = `/pg/dbs/${datname}`;
+        db_page_url.searchParams.set("db", datname);
         db_page_url.searchParams.set("name", input.user);
         db_page_url.searchParams.set("password", input.password);
       navigate(db_page_url.toString());

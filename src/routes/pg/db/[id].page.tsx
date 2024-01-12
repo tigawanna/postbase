@@ -1,7 +1,7 @@
 
 import { PageProps, navigate } from "rakkasjs";
 import { Suspense } from "react";
-import { OneDatabase } from "./components/OneDatabase";
+import { OneDatabase } from "../dbs/[db]/components/OneDatabase";
 
 export default function OneDatabasePage({ params, url }: PageProps) {
   const db_name = params.id;
@@ -9,7 +9,7 @@ export default function OneDatabasePage({ params, url }: PageProps) {
   const db_password = url.searchParams.get("password");
 
 if(!db_name||!db_user||!db_password){
-  return navigate("..");
+  return navigate("/pg/db");
 }
   return (
     <div className="w-full h-full min-h-screen flex items-center justify-center">

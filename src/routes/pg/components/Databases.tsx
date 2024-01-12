@@ -23,6 +23,7 @@ export function Databases({}: DatabasesProps) {
       return { result: { database, users }, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);
+      
       return { result: null, error };
     }
   });
