@@ -71,7 +71,7 @@ export function OneTableRows({
           {data.map((row:any, idx:any) => {
             const row_key = JSON.stringify(row);
             return (
-              <tr key={row_key + idx}>
+              <tr key={row_key + idx} className="hover:bg-base-300">
                 {Object.values(row).map((value, idx) => {
                  if(!value){
                     return

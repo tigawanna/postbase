@@ -10,8 +10,8 @@
 /* Hide the default scroll bar */
 ::-webkit-scrollbar {
   width: 5px;
-  height: 7px;
-  border-radius: "10%";
+  height: 12px;
+  border-radius: "50%";
 }
 
 /* Track */
@@ -21,7 +21,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-accent-content;
+  @apply bg-accent/70;
 }
 
 /* Handle on hover */
