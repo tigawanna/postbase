@@ -1,7 +1,7 @@
 import { PageProps, Redirect } from "rakkasjs";
 import { OneTableRows } from "./components/OneTableRows";
 export default function OneTablePage({ params, url }: PageProps) {
-  console.log(" ===  params === ", params);
+//   console.log(" ===  params === ", params);
 
   const db_name = params.db;
   const db_table = params.table;
@@ -16,7 +16,7 @@ export default function OneTablePage({ params, url }: PageProps) {
   }
 
   return (
-    <div className="w-full h-full min-h-screen flex flex-col justify-center">
+    <div className="w-full h-screen flex flex-col justify-center">
       <div className="text-4xl font-bold w-full h-fit text-center p-2 bg-base-300">
         {params.table} table
       </div>

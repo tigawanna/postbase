@@ -2,9 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+* {
+  min-width: 0px;
+}
 /* Hide the default scroll bar */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 7px;
+  border-radius: "10%";
 }
 
 /* Track */
@@ -21,6 +28,8 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-accent;
 }
+
+
 
 @layer base {
   :root {
