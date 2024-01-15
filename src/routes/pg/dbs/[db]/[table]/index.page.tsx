@@ -7,8 +7,17 @@ export default function OneTablePage({ params, url }: PageProps) {
   const db_table = params.table;
   const db_user = url.searchParams.get("name");
   const db_password = url.searchParams.get("password");
+  const db_primary_column = url.searchParams.get("column");
 
-  if (!db_name || !db_table || !db_user || !db_password) {
+    console.log(" ===  onetable rows params  === ", {
+      db_name,
+      db_table,
+      db_user,
+      db_password,
+      db_primary_column,
+    });
+
+  if (!db_name || !db_table || !db_user || !db_password || !db_primary_column) {
     // console.log(" ==== one table missing params === ",{db_name,db_table,db_user,db_password});
     const redirect_url = url;
     redirect_url.pathname = `pg/dbs/${db_name}`;
@@ -25,6 +34,7 @@ export default function OneTablePage({ params, url }: PageProps) {
         db_table={db_table}
         db_user={db_user}
         db_password={db_password}
+        db_primary_column={db_primary_column}
       />
     </div>
   );

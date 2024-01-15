@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { Link, Redirect, usePageContext, useSSQ } from "rakkasjs";
+import {  Redirect, usePageContext, useSSQ } from "rakkasjs";
 import { PickTableColumnDialog } from "./PickTableColumn";
 
 interface OneDatabaseProps {
@@ -13,10 +13,9 @@ export function OneDatabase({
   db_password,
   db_user,
 }: OneDatabaseProps) {
-  const page_ctx = usePageContext();
-  const table_url = page_ctx.url;
 
-  const query = useSSQ(async (ctx) => {
+
+  const query = useSSQ(async () => {
     try {
       const sql = postgres({
         host: "localhost",
@@ -44,11 +43,7 @@ export function OneDatabase({
           column_types: string;
         },
       ];
-      // const tables =
-      //   (await sql`SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'`) as any as [
-      //     { table_name: string },
-      //   ];
-      // console.log(" === tabless == ", tables);
+ 
       return { tables, error: null };
     } catch (error: any) {
       // console.log(" === error == ", error.message);
@@ -67,7 +62,7 @@ export function OneDatabase({
       <div className="w-full h-full flex flex-col  items-center  gap-2 mt-[10%]">
         <div className="w-full flex flex-wrap items-center justify-center gap-2 px-2 pb-8">
           {query?.data?.tables?.map((table) => {
-            table_url.pathname = `/pg/dbs/${db_name}/${table.table_name}`;
+    
             const columns = table.columns.split(",");
             const column_types = table.column_types.split(",");
             const combined_columns = columns.map((column, index) => {
@@ -83,7 +78,8 @@ export function OneDatabase({
                 <div className="flex justify-between items-center">
                   <h1 className="text-2xl font-bold ">{table.table_name}</h1>
                   <PickTableColumnDialog
-                    table_url={table_url}
+                    // table_url={table_url}
+                    db_name={db_name}
                     table_name={table.table_name}
                     columns={columns}
                   />
