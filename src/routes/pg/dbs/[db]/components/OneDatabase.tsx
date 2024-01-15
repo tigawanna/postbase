@@ -1,6 +1,6 @@
 import postgres from "postgres";
-import { Link, Redirect,  usePageContext, useSSQ } from "rakkasjs";
-
+import { Link, Redirect, usePageContext, useSSQ } from "rakkasjs";
+import { PickTableColumnDialog } from "./PickTableColumn";
 
 interface OneDatabaseProps {
   db_name: string;
@@ -71,16 +71,23 @@ export function OneDatabase({
             const columns = table.columns.split(",");
             const column_types = table.column_types.split(",");
             const combined_columns = columns.map((column, index) => {
-              return `${column}(${column_types[index]})`;
+              return `${column} (${column_types[index].trim()})`;
             });
             return (
-              <Link
+              <div
                 key={table.table_name}
-                href={table_url.toString()}
+                // href={table_url.toString()}
                 className="min-w-fit flex flex-col  bg-base-200 rounded-xl shadow-base-100 
                 shadow-lg p-4  flex-grow hover:bg-base-300 gap-3"
               >
-                <h1 className="text-2xl font-bold ">{table.table_name}</h1>
+                <div className="flex justify-between items-center">
+                  <h1 className="text-2xl font-bold ">{table.table_name}</h1>
+                  <PickTableColumnDialog
+                    table_url={table_url}
+                    table_name={table.table_name}
+                    columns={columns}
+                  />
+                </div>
 
                 <ul className="divide-y gap-0.5">
                   {combined_columns.map((column) => {
@@ -91,7 +98,7 @@ export function OneDatabase({
                     );
                   })}
                 </ul>
-              </Link>
+              </div>
             );
           })}
         </div>

@@ -75,7 +75,7 @@ export function PickDatabaseDialog({
   const mutation_error = mutation.data?.error;
     const page_ctx = usePageContext();
     const db_page_url = new URL(page_ctx.url);
-  useEffect(() => {
+    useEffect(() => {
     if (isString(mutation_error) && mutation.isError) {
       hotToast({
         title: "Error",
