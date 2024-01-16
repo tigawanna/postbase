@@ -1,5 +1,7 @@
 import { PageProps, Redirect } from "rakkasjs";
 import { OneTableRows } from "./components/OneTableRows";
+import { OneTableRowsOffsetPages } from "./components/OneTableRowsOffsetPages";
+
 export default function OneTablePage({ params, url }: PageProps) {
 //   console.log(" ===  params === ", params);
 
@@ -9,13 +11,13 @@ export default function OneTablePage({ params, url }: PageProps) {
   const db_password = url.searchParams.get("password");
   const db_primary_column = url.searchParams.get("column");
 
-    console.log(" ===  onetable rows params  === ", {
-      db_name,
-      db_table,
-      db_user,
-      db_password,
-      db_primary_column,
-    });
+    // console.log(" ===  onetable rows params  === ", {
+    //   db_name,
+    //   db_table,
+    //   db_user,
+    //   db_password,
+    //   db_primary_column,
+    // });
 
   if (!db_name || !db_table || !db_user || !db_password || !db_primary_column) {
     // console.log(" ==== one table missing params === ",{db_name,db_table,db_user,db_password});
@@ -29,7 +31,7 @@ export default function OneTablePage({ params, url }: PageProps) {
       <div className="text-4xl font-bold w-full h-fit text-center p-2 bg-base-300">
         {params.table} table
       </div>
-      <OneTableRows
+      <OneTableRowsOffsetPages
         db_name={db_name}
         db_table={db_table}
         db_user={db_user}

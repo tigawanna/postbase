@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/components/shadcn/lib/utils"
 import { ButtonProps, buttonVariants } from "@/components/shadcn/ui/button"
+import { Link } from "rakkasjs"
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -52,12 +53,14 @@ const PaginationLink = ({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        className
+        className,
       )}
-      {...props}
-    />
+
+    >
+      <Link href={props.href}>{props.children}</Link>
+    </a>
   </PaginationItem>
-)
+);
 PaginationLink.displayName = "PaginationLink"
 
 const PaginationPrevious = ({
