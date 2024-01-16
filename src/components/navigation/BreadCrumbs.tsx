@@ -1,5 +1,6 @@
 import { StyledLink } from "rakkasjs";
 import { useRakkasBreadCrumbs } from "./useBreadCrumbs";
+import { ChevronRight } from "lucide-react";
 
 interface BreadCrumbsProps {}
 
@@ -15,10 +16,10 @@ export default function BreadCrumbs({}: BreadCrumbsProps) {
           <StyledLink
             key={name}
             href={new_url.toString()}
-            className="text-sm text-white hover:text-[#fac091]"
-            activeClass="text-[#effa91]"
+            className="text-sm  hover:brightness-50 btn btn-sm "
+            activeClass="text-secondary"
           >
-            {name} {idx < breadcrumb_routes.length - 1 && ">"}
+            {name} {idx < breadcrumb_routes.length - 1 && <ChevronRight/>}
           </StyledLink>
         );
       })}
