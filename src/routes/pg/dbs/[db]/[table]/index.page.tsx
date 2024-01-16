@@ -20,7 +20,7 @@ export default function OneTablePage({ params, url }: PageProps) {
     // });
 
   if (!db_name || !db_table || !db_user || !db_password || !db_primary_column) {
-    // console.log(" ==== one table missing params === ",{db_name,db_table,db_user,db_password});
+    console.log(" ==== one table missing params redirecting  === ",{db_name,db_table,db_user,db_password});
     const redirect_url = url;
     redirect_url.pathname = `pg/dbs/${db_name}`;
     return <Redirect href={redirect_url.toString()} />;
