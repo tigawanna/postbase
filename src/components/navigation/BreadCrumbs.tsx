@@ -5,6 +5,7 @@ interface BreadCrumbsProps {}
 
 export default function BreadCrumbs({}: BreadCrumbsProps) {
   const { breadcrumb_routes,current } = useRakkasBreadCrumbs();
+  
   return (
     <div className="flex z-50 px-2 py- ">
       {breadcrumb_routes.map(({ name, path }, idx) => {
