@@ -10,6 +10,7 @@ import React from "react";
 import { Sidebar } from "@/components/navigation/bars/sidebar";
 import Toaster from "@/components/wrappers/DefaltExportedToaster";
 import ErrorBoundaryComponent from "@/components/navigation/ErrorBoundaryComponent";
+import BreadCrumbs from "@/components/navigation/BreadCrumbs";
 
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
@@ -29,11 +30,12 @@ function Layout({ children }: LayoutProps) {
             <Sidebar />
           </div>
           <div className="w-full flex flex-col gap-2 pt-2">
-            {/* <div className="w-fit flex rounded-xl p-auto">
+
+            <div className="w-fit flex rounded-xl p-auto">
             <ClientSuspense fallback={<div className="h-5"></div>}>
               <BreadCrumbs />
             </ClientSuspense>
-          </div> */}
+          </div>
           <ErrorBoundaryComponent>
             {children}
             </ErrorBoundaryComponent>

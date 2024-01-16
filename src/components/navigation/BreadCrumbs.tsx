@@ -4,14 +4,16 @@ import { useRakkasBreadCrumbs } from "./useBreadCrumbs";
 interface BreadCrumbsProps {}
 
 export default function BreadCrumbs({}: BreadCrumbsProps) {
-  const { breadcrumb_routes } = useRakkasBreadCrumbs();
+  const { breadcrumb_routes,current } = useRakkasBreadCrumbs();
   return (
     <div className="flex z-50 px-2 py- ">
       {breadcrumb_routes.map(({ name, path }, idx) => {
+        const new_url = new URL(current);
+        new_url.pathname = path;
         return (
           <StyledLink
             key={name}
-            href={path}
+            href={new_url.toString()}
             className="text-sm text-white hover:text-[#fac091]"
             activeClass="text-[#effa91]"
           >

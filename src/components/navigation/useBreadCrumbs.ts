@@ -15,5 +15,5 @@ export function useRakkasBreadCrumbs() {
     [],
   );
   // console.log("breadcrumbs routes  === ",breadcrumb_routes);
-  return { breadcrumb_routes };
+  return { breadcrumb_routes,current };
 }
