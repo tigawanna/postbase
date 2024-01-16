@@ -15,13 +15,15 @@ export function OneDatabase({
 }: OneDatabaseProps) {
 
 
-  const query = useSSQ(async () => {
+  const query = useSSQ(async (ctx) => {
     try {
       const sql = postgres({
         host: "localhost",
         user: db_user!,
         password: db_password!,
         database: db_name!,
+          idle_timeout: 20,
+  max_lifetime: 60 * 30
       });
       const tables = (await sql`
         SELECT table_name,

@@ -1,13 +1,23 @@
-import { useInfiniteQuery, useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { Button } from "@/components/shadcn/ui/button";
+import {
+  useInfiniteQuery,
+  useSuspenseInfiniteQuery,
+} from "@tanstack/react-query";
 import postgres from "postgres";
-import { Redirect, runServerSideQuery, usePageContext, useRequestContext, useSSQ } from "rakkasjs";
+import {
+  Redirect,
+  runServerSideQuery,
+  usePageContext,
+  useRequestContext,
+  useSSQ,
+} from "rakkasjs";
 
 interface OneTableRowsProps {
   db_name: string;
   db_table: string;
   db_user: string;
   db_password: string;
-  db_primary_column:string;
+  db_primary_column: string;
 }
 export function OneTableRows({
   db_name,
@@ -25,75 +35,93 @@ export function OneTableRows({
   //   db_password,
   //   db_primary_column
   // });
-// runServerSideQuery
-interface GetTableRowsProps {
-  cursor?: string
-}
-async function getTableRows({cursor}:GetTableRowsProps){
-return runServerSideQuery(ctx,
-  async (ctx) => {
-    try {
-      const sql = postgres({
-        host: "localhost",
-        user: db_user!,
-        password: db_password!,
-        database: db_name!,
-      });
-       const rows = (await sql`
-      SELECT * from ${sql(db_table)} 
-      LIMIT 10`) as any as [{ [key: string]: any }];
-      //   console.log(" === tabless == ", rows);
-      return { rows, error: null };
-    } catch (error: any) {
-      console.log(" === error == ", error.message);
-      return { rows: null, error: error.message };
-    }
-},{
-  uniqueId:"db-table-rows",
-})
-}
+  // runServerSideQuery
+  interface GetTableRowsProps {
+    cursor?: any;
+  }
+  async function getTableRows({ cursor}: GetTableRowsProps) {
+    console.log(" ===  cursosr  === ", cursor)
+    return runServerSideQuery(
+      ctx,
+      async (ctx) => {
+        try {
+          const sql = postgres({
+            host: "localhost",
+            user: db_user!,
+            password: db_password!,
+            database: db_name!,
+              idle_timeout: 20,
+  max_lifetime: 60 * 30
 
-const query = useSuspenseInfiniteQuery({
-  queryKey: ["table", db_name, db_table, db_primary_column],
-    queryFn: async ({ pageParam}) => {
-    return getTableRows({})
-  },
-  initialPageParam:"",
-  getNextPageParam: (lastPage) => {
-    // @ts-expect-error
-    const last_page_item = lastPage?.rows[lastPage?.rows.length - 1]
-    const next = last_page_item?.[db_primary_column]??""
-    console.log("nextPage", next)
-    console.log("lastPage", lastPage?.rows)
-    return next
-  },
+          });
 
-})
+          let query = sql`
+          SELECT * from ${sql(db_table)} LIMIT 11`;
 
-  const query2 = useSSQ(async (ctx) => {
-    try {
-      const sql = postgres({
-        host: "localhost",
-        user: db_user!,
-        password: db_password!,
-        database: db_name!,
-      });
-      const rows = (await sql`
-      SELECT * from ${sql(db_table)} 
-      LIMIT 10`
-      ) as any as [
-        { [key: string]: any },
-      ];
-      //   console.log(" === tabless == ", rows);
-      return { rows, error: null };
-    } catch (error: any) {
-      console.log(" === error == ", error.message);
-      return { rows: null, error: error.message };
-    }
+          if (cursor) {
+    query = sql`
+    SELECT * from ${sql(db_table)} WHERE ${sql(db_primary_column)} > ${cursor} LIMIT 11`;
+          }
+          const rows = (await query) as any as [{ [key: string]: any }];
+          //   console.log(" === tabless == ", rows);
 
+          return {
+            rows: rows.slice(0, 10),
+            hasNextPage: rows.length > 10,
+            error: null,
+          };
+        } catch (error: any) {
+          console.log(" === error == ", error.message);
+          return { rows: null, error: error.message };
+        }
+      },
+      {
+        uniqueId: "db-table-rows",
+      },
+    );
+  }
+
+  const query = useSuspenseInfiniteQuery({
+    queryKey: ["table", db_name, db_table, db_primary_column],
+    queryFn: async ({ pageParam }) => {
+      return getTableRows({cursor: pageParam});
+    },
+    initialPageParam:undefined,
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNextPage) return;
+      const last_page_item = lastPage?.rows[lastPage?.rows.length - 1];
+      const next = last_page_item?.[db_primary_column]
+      // console.log("nextPage", next);
+      // console.log("lastPage", lastPage?.rows);
+      return next;
+    },
   });
 
-const rows = query.data.pages.flatMap((page) => page.rows);
+  console.log(" ==== query  ==== ", query.hasNextPage);
+
+  // const query2 = useSSQ(async (ctx) => {
+  //   try {
+  //     const sql = postgres({
+  //       host: "localhost",
+  //       user: db_user!,
+  //       password: db_password!,
+  //       database: db_name!,
+  //     });
+  //     const rows = (await sql`
+  //     SELECT * from ${sql(db_table)} 
+  //     LIMIT 10`) as any as [{ [key: string]: any }];
+  //     //   console.log(" === tabless == ", rows);
+  //     return { rows, error: null };
+  //   } catch (error: any) {
+  //     console.log(" === error == ", error.message);
+  //     return { rows: null, error: error.message };
+  //   }
+  // });
+
+  console.log(" ===  pages  === ",query?.data?.pages)
+  const error = query.data?.pages[0]?.error;
+  const rows = query.data?.pages?.flatMap((page) => page?.rows);
 
   // if (query.data) {
   //   const redirect_url = page_ctx.url;
@@ -103,7 +131,7 @@ const rows = query.data.pages.flatMap((page) => page.rows);
 
   //   console.log(" ===== table rows === ",query.data.rows);
   // const data = query.data.rows;
-  if (!rows) {
+  if (!rows || error) {
     return (
       <div className="w-full h-full flex items-center justify-center">
         empty table
@@ -114,33 +142,37 @@ const rows = query.data.pages.flatMap((page) => page.rows);
     <div className="w-full h-screen overflow-auto">
       <table className="w-full table ">
         <thead className="sticky top-0 ">
-     {rows[0]&&<tr className="text-lg ">
-            {Object.keys(rows[0]).map((key,idx) => (
-              <th className="bg-base-300 " key={key+idx}>
-                {key}
-              </th>
-            ))}
-          </tr>}
+          {rows[0] && (
+            <tr className="text-lg ">
+              {Object.keys(rows[0]).map((key, idx) => (
+                <th className="bg-base-300 " key={key + idx}>
+                  {key}
+                </th>
+              ))}
+            </tr>
+          )}
         </thead>
         <tbody>
-          {rows.map((row:any, idx:any) => {
-           
-            const row_key = JSON.stringify(row??{});
+          {rows.map((row: any, idx: any) => {
+            const row_key = JSON.stringify(row ?? {});
             return (
               <tr key={row_key + idx} className="hover:bg-base-300">
                 {Object.values(row).map((value, idx) => {
-                 if(!value){
-                    return
+                  if (!value) {
+                    return;
                   }
                   if (typeof value === "object" || Array.isArray(value)) {
                     return (
-                      <td className="" key={row_key + JSON.stringify(value) + idx}>
+                      <td
+                        className=""
+                        key={row_key + JSON.stringify(value) + idx}
+                      >
                         {JSON.stringify(value)}
                       </td>
                     );
                   }
                   return (
-                <td className="" key={row_key + value + idx}>
+                    <td className="" key={row_key + value + idx}>
                       {/*@ts-expect-error */}
                       {value}
                     </td>
@@ -151,6 +183,9 @@ const rows = query.data.pages.flatMap((page) => page.rows);
           })}
         </tbody>
       </table>
+      <Button variant="outline" onClick={() => query.fetchNextPage()} disabled={!query.hasNextPage}>
+        Load more
+      </Button>
     </div>
   );
 }

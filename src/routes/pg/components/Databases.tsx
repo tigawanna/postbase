@@ -6,11 +6,14 @@ interface DatabasesProps {}
 export function Databases({}: DatabasesProps) {
   const query = useSSQ(async (ctx) => {
     try {
+
       const sql = postgres({
         host: "localhost",
         user: "postgres",
         password: "postgres",
         database: "postgres",
+        idle_timeout: 20,
+        max_lifetime: 60 * 30,
       });
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
@@ -23,7 +26,6 @@ export function Databases({}: DatabasesProps) {
       return { result: { database, users }, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);
-      
       return { result: null, error };
     }
   });
