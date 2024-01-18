@@ -64,7 +64,7 @@ export async function post(ctx: RequestContext) {
     return json(res);
   } catch (error: any) {
     console.log(" === local postgres connection error == ", error.message);
-    ctx?.deleteCookie("pg_config");
+    // ctx?.deleteCookie("pg_config");
     return json({ result: null, error: error.message }, { status: 500 });
   }
 }

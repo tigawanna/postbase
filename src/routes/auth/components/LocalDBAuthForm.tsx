@@ -6,7 +6,7 @@ import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import postgres from "postgres";
 import { useSSQ, useSSM } from "rakkasjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
 import { LocalDBAuthProps } from "@/lib/pg/pg";
 
@@ -49,8 +49,8 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
     try {
       // console.log(" ===  ctx ==== ", ctx);
       // console.log(" ===  vars ==== ", vars);
-      console.log(" ===  cookie ==== ", ctx.cookie);
-      console.log(" ===  setCookie ==== ", ctx.setCookie);
+      // console.log(" ===  cookie ==== ", ctx.cookie);
+      // console.log(" ===  setCookie ==== ", ctx.setCookie);
 
       const sql = postgres({
         host: input.db_host,
@@ -65,14 +65,18 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       ];
 
       console.log(" === succesfull local postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars));
+      ctx?.setCookie("pg_config", JSON.stringify(vars),{
+        sameSite:"strict",httpOnly:false,maxAge:60*60*24*30,path:"/"
+      });
       return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === local postgres connection error == ", error.message);
-      ctx?.deleteCookie("pg_config");
+      // ctx?.deleteCookie("pg_config");
       return { result: null, error: error.message };
     }
   });
+
+  console.log(" ===== local db connection muation data === ", mutation.data);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInput({
@@ -80,6 +84,7 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       [e.target.id]: e.target.value,
     });
   }
+
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
   return (

@@ -1,11 +1,15 @@
 /* eslint-disable no-var */
 import { startClient } from "rakkasjs";
-import { QueryClientProvider, QueryClient, MutationCache } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  QueryClient,
+  MutationCache,
+} from "@tanstack/react-query";
+import { parse, serialize } from "cookie-es";
+import { safeDestr } from "destr";
+import { DbAuthProps } from "./lib/pg/pg";
 
-
-
-
-const queryClient:QueryClient = new QueryClient({
+const queryClient: QueryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: async (data, variable, context, mutation) => {
       if (Array.isArray(mutation.meta?.invalidates)) {
@@ -52,8 +56,15 @@ startClient({
       // Do something before starting the client
     },
     extendPageContext(ctx) {
-      // console.log("============= CLIENT SIDE PB  ==============",ctx.locals.pb)
-
+      if (document?.cookie) {
+        const cookie = parse(document?.cookie);
+        if (cookie) {
+          const pg_config = safeDestr<DbAuthProps>(cookie?.pg_config);
+          // console.log("  ===  entry-client pg_config =====", pg_config);
+          ctx.locals.pg = pg_config;
+          console.log("  ===  entry-client locals.pg =====", ctx.locals.pg);
+        }
+      }
     },
   },
 });

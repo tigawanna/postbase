@@ -24,8 +24,8 @@ export function RemoteDBAuthForm({}: RemoteDBAuthFormProps) {
   });
   const mutation = useSSM(async (ctx, vars: RemoteDBAuthProps) => {
     try {
-      console.log(" ===  cookie ==== ", ctx.cookie);
-      console.log(" ===  setCookie ==== ", ctx.setCookie);
+      // console.log(" ===  cookie ==== ", ctx.cookie);
+      // console.log(" ===  setCookie ==== ", ctx.setCookie);
       const sql = postgres(input.connection_url, {
         idle_timeout: 20,
         max_lifetime: 60 * 30,
@@ -35,11 +35,16 @@ export function RemoteDBAuthForm({}: RemoteDBAuthFormProps) {
       ];
 
       console.log(" === succesfull remote postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars));
+      ctx?.setCookie("pg_config", JSON.stringify(vars), {
+        sameSite: "strict",
+        httpOnly: false,
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
+      });
       return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === remote postgres connection error == ", error.message);
-      ctx?.deleteCookie("pg_config");
+      // ctx?.deleteCookie("pg_config");
       return { result: null, error: error.message };
     }
   });

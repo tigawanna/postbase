@@ -1,20 +1,19 @@
 import postgres from "postgres";
 import { useSSQ } from "rakkasjs";
 import { PickDatabaseDialog } from "./PickDatabaseDialog";
+import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
+import { safeDestr } from "destr";
 interface DatabasesProps {}
 
 export function Databases({}: DatabasesProps) {
   const query = useSSQ(async (ctx) => {
     try {
-
-      const sql = postgres({
-        host: "localhost",
-        user: "postgres",
-        password: "postgres",
-        database: "postgres",
-        idle_timeout: 20,
-        max_lifetime: 60 * 30,
-      });
+      // console.log("databases use ssq locals == ", ctx.cookie);
+     const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      if (!config) {
+        return { result: null, error: "no config" };
+      }
+      const sql = postgresInstance(config);
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
       ];

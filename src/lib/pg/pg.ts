@@ -1,18 +1,21 @@
-
 import postgres from "postgres";
 
-export function postgresInstance(options?: postgres.Options<{}> | undefined){
-  const pg_opts = options || {  
-    host: "localhost",
-    user: "postgres",
-    password: "postgres",
-    database: "postgres",
+export function postgresInstance(options: DbAuthProps) {
+  if (options.local_or_remote === "local") {
+    return postgres({
+      host: options.db_host,
+      user: options.db_user,
+      password: options.db_password,
+      database: options.db_name,
+      idle_timeout: 20,
+      max_lifetime: 60 * 30,
+    });
+  }
+  return postgres(options.connection_url, {
     idle_timeout: 20,
-    max_lifetime: 60 * 30
-  };
-return  postgres(pg_opts);
-} 
-
+    max_lifetime: 60 * 30,
+  });
+}
 
 export interface LocalDBAuthProps {
   local_or_remote: "local";

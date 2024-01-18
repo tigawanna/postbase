@@ -1,5 +1,5 @@
 import { Link } from "rakkasjs";
-import { DatabaseBackup, Home } from "lucide-react";
+import { DatabaseBackup, Home, TestTube } from "lucide-react";
 import { MiniSettingsModal } from "../mini-settings/MiniSettings";
 
 interface SidebarProps {}
@@ -8,6 +8,7 @@ export function Sidebar({}: SidebarProps) {
   const routes = [
     { name: "home", url: "/", icon: <Home /> },
     { name: "pg", url: "/pg", icon: <DatabaseBackup/>},
+    { name: "test", url: "/test", icon: <TestTube/>},
   ];
   return (
     <header

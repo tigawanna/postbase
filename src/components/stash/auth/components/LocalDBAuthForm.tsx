@@ -69,7 +69,7 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === local postgres connection error == ", error.message);
-      ctx?.deleteCookie("db_user");
+      // ctx?.deleteCookie("db_user");
       return { result: null, error: error.message };
     }
   });

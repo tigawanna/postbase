@@ -5,8 +5,9 @@ import {
   TabsTrigger,
   TabsContent,
 } from "@/components/shadcn/ui/tabs";
-import { LocalDBAuthForm } from "../../components/stash/aut-wuth-api-route/components/LocalDBAuthForm";
-import { RemoteDBAuthForm } from "../../components/stash/aut-wuth-api-route/components/RemoteDBAuthForm";
+import { LocalDBAuthForm } from "./components/LocalDBAuthForm";
+import { RemoteDBAuthForm } from "./components/RemoteDBAuthForm";
+
 
 
 export default function LoginPage({}: PageProps) {

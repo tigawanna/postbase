@@ -4,12 +4,10 @@ import { DbAuthProps } from "@/lib/pg/pg";
 
 export function pageGuard(ctx: PageContext): LookupHookResult {
 
+  // console.log("user in auth route  ====== ",user)
   const locals = ctx.locals
-  console.log(" ====== locals in auth route  ====== ",locals)
-  console.log("==== pg route guard cookies ======= ", ctx.requestContext?.cookie)
-  // const pg_config = safeDestr<DbAuthProps>(ctx.requestContext?.cookie);
-  // console.log("==== pg route guard locals ======= ", pg_config)
-  const pg_config = locals?.pg
+  console.log("==== test route guard locals ======= ",locals)
+  const pg_config = locals.pg
   if (!pg_config) {
     return {
       redirect: "/auth"

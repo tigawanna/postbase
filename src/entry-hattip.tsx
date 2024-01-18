@@ -54,9 +54,12 @@ export default createRequestHandler({
 
 
         const cookie = requestContext.cookie;
-        if (cookie?.db_user) {
-          const pg_config = safeDestr<DbAuthProps>(cookie?.db_user);
+        if (cookie?.pg_config) {
+          console.log("  ===  entry-hatip cookie =====", cookie.pg_config);
+          const pg_config = safeDestr<DbAuthProps>(cookie?.pg_config);
+          // console.log("  ===  entry-hatip pg_config =====", pg_config);
           ctx.locals.pg = pg_config;
+          console.log("  ===  entry-hatip locals.pg =====", ctx.locals.pg);
         }
       },
 
