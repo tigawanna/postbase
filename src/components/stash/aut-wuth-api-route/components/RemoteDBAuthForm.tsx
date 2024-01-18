@@ -35,11 +35,11 @@ export function RemoteDBAuthForm({}: RemoteDBAuthFormProps) {
       ];
 
       console.log(" === succesfull remote postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars));
+      ctx?.setCookie("db_user", JSON.stringify(vars));
       return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === remote postgres connection error == ", error.message);
-      ctx?.deleteCookie("pg_config");
+      ctx?.deleteCookie("db_user");
       return { result: null, error: error.message };
     }
   });

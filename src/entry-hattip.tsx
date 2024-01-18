@@ -7,14 +7,18 @@ import {
 } from "@tanstack/react-query";
 import { uneval } from "devalue";
 import { cookie } from "@hattip/cookie";
+import { safeDestr } from "destr";
+import { DbAuthProps } from "./lib/pg/pg";
+
 
 export async function beforePageLuciaMiddleware(ctx: RequestContext<unknown>) {}
 
 export default createRequestHandler({
   middleware: {
-    beforePages: [cookie()],
+    beforePages: [],
     beforeApiRoutes: [],
     beforeNotFound: [],
+    beforeAll: [cookie()],
   },
 
   createPageHooks(requestContext) {
@@ -47,6 +51,13 @@ export default createRequestHandler({
       async extendPageContext(ctx) {
         const request = ctx.requestContext?.request;
         if (!request) return;
+
+
+        const cookie = requestContext.cookie;
+        if (cookie?.db_user) {
+          const pg_config = safeDestr<DbAuthProps>(cookie?.db_user);
+          ctx.locals.pg = pg_config;
+        }
       },
 
       wrapApp(app) {

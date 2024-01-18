@@ -119,6 +119,9 @@ dependencies:
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
+  destr:
+    specifier: ^2.0.2
+    version: 2.0.2
   devalue:
     specifier: ^4.3.2
     version: 4.3.2
@@ -3744,6 +3747,10 @@ packages:
       has-property-descriptors: 1.0.1
       object-keys: 1.1.1
     dev: true
+
+  /destr@2.0.2:
+    resolution: {integrity: sha512-65AlobnZMiCET00KaFFjUefxDX0khFA/E4myqZ7a6Sq1yZtR8+FVIvilVX66vF2uobSumxooYZChiRPCKNqhmg==}
+    dev: false
 
   /detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}

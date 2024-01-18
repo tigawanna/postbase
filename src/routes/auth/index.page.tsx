@@ -1,26 +1,14 @@
-import { PageProps } from "rakkasjs";
+import { PageProps,RequestContext } from "rakkasjs";
 import {
   Tabs,
   TabsList,
   TabsTrigger,
   TabsContent,
 } from "@/components/shadcn/ui/tabs";
-import { LocalDBAuthForm } from "./components/LocalDBAuthForm";
-import { RemoteDBAuthForm } from "./components/RemoteDBAuthForm";
+import { LocalDBAuthForm } from "../../components/stash/aut-wuth-api-route/components/LocalDBAuthForm";
+import { RemoteDBAuthForm } from "../../components/stash/aut-wuth-api-route/components/RemoteDBAuthForm";
 
-export interface LocalDBAuthProps {
-  local_or_remote: "local";
-  db_name: string;
-  db_password: string;
-  db_user: string;
-  db_host: string;
-}
-export interface RemoteDBAuthProps {
-  local_or_remote: "remote";
-  connection_url: string;
-}
 
-export type DbAuthProps = LocalDBAuthProps | RemoteDBAuthProps;
 export default function LoginPage({}: PageProps) {
   return (
     <div className="w-full flex items-center justify-center overflow-auto">

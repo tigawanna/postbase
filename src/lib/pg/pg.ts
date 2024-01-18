@@ -12,3 +12,18 @@ export function postgresInstance(options?: postgres.Options<{}> | undefined){
   };
 return  postgres(pg_opts);
 } 
+
+
+export interface LocalDBAuthProps {
+  local_or_remote: "local";
+  db_name: string;
+  db_password: string;
+  db_user: string;
+  db_host: string;
+}
+export interface RemoteDBAuthProps {
+  local_or_remote: "remote";
+  connection_url: string;
+}
+
+export type DbAuthProps = LocalDBAuthProps | RemoteDBAuthProps;

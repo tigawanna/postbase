@@ -1,7 +1,8 @@
 import { RequestContext } from "rakkasjs";
 import { json } from "@hattip/response";
-import { DbAuthProps } from "@/routes/auth/index.page";
 import postgres from "postgres";
+import { DbAuthProps } from "@/lib/pg/pg";
+
 export async function get(ctx: RequestContext) {
   ctx.setCookie("test-key", "value");
   return json({
@@ -24,7 +25,7 @@ export async function post(ctx: RequestContext) {
         { datname: string },
       ];
       console.log(" === succesfull local postgres connection == ", database);
-      ctx?.setCookie("db_user", JSON.stringify(input));
+      ctx?.setCookie("pg_config", JSON.stringify(input));
       const res = { result: { database }, error: null };
       return json(res);
     }
@@ -58,12 +59,12 @@ export async function post(ctx: RequestContext) {
       { datname: string },
     ];
     console.log(" === succesfull local postgres connection == ", database);
-    ctx?.setCookie("db_user", JSON.stringify(input));
+    ctx?.setCookie("pg_config", JSON.stringify(input));
     const res = { result: { database }, error: null };
     return json(res);
   } catch (error: any) {
     console.log(" === local postgres connection error == ", error.message);
-    ctx?.deleteCookie("db_user");
+    ctx?.deleteCookie("pg_config");
     return json({ result: null, error: error.message }, { status: 500 });
   }
 }

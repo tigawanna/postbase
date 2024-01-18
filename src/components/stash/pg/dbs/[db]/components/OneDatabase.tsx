@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { Redirect, useSSQ } from "rakkasjs";
+import { Redirect, usePageContext, useSSQ } from "rakkasjs";
 import { PickTableColumnDialog } from "./PickTableColumn";
 
 interface OneDatabaseProps {
