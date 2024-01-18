@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import {  Redirect, usePageContext, useSSQ } from "rakkasjs";
+import { Redirect, usePageContext, useSSQ } from "rakkasjs";
 import { PickTableColumnDialog } from "./PickTableColumn";
 
 interface OneDatabaseProps {
@@ -13,8 +13,6 @@ export function OneDatabase({
   db_password,
   db_user,
 }: OneDatabaseProps) {
-
-
   const query = useSSQ(async (ctx) => {
     try {
       const sql = postgres({
@@ -22,8 +20,8 @@ export function OneDatabase({
         user: db_user!,
         password: db_password!,
         database: db_name!,
-          idle_timeout: 20,
-  max_lifetime: 60 * 30
+        idle_timeout: 20,
+        max_lifetime: 60 * 30,
       });
       const tables = (await sql`
         SELECT table_name,
@@ -45,7 +43,7 @@ export function OneDatabase({
           column_types: string;
         },
       ];
- 
+
       return { tables, error: null };
     } catch (error: any) {
       // console.log(" === error == ", error.message);
@@ -64,7 +62,6 @@ export function OneDatabase({
       <div className="w-full h-full flex flex-col  items-center  gap-2 mt-[10%]">
         <div className="w-full flex flex-wrap items-center justify-center gap-2 px-2 pb-8">
           {query?.data?.tables?.map((table) => {
-    
             const columns = table.columns.split(",");
             const column_types = table.column_types.split(",");
             const combined_columns = columns.map((column, index) => {

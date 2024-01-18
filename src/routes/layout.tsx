@@ -6,6 +6,7 @@ import {
   useLocation,
 } from "rakkasjs";
 import "./index.css";
+
 import React from "react";
 import { Sidebar } from "@/components/navigation/bars/sidebar";
 import Toaster from "@/components/wrappers/DefaltExportedToaster";
@@ -18,7 +19,7 @@ function Layout({ children }: LayoutProps) {
   // console.log(" page ctx ==== ",page_ctx.locals.pb)
   return (
     <ErrorBoundaryComponent>
-      <div className="w-full min-h-screen h-full flex flex-col items-center ">
+      <div className="w-full h-screen flex flex-col items-center ">
         {/* <Head description={"Resume building assistant"} /> */}
         <ClientSuspense fallback={<div></div>}>
           <Nprogress

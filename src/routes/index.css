@@ -124,3 +124,10 @@
         animation-duration: 15s;
     }
 }
+
+
+code pre{
+  line-height: 10px;
+  padding: 20px;
+  border-radius: 15px;
+}
