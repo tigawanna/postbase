@@ -5,20 +5,12 @@ import { UserCombobox } from "@/routes/pg/components/UserCombobox";
 import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import postgres from "postgres";
-import { useSSQ, useSSM, useRequestContext, RequestContext, useMutation } from "rakkasjs";
+import { useSSQ, useSSM } from "rakkasjs";
 import { useState } from "react";
 import { LocalDBAuthProps } from "../index.page";
 import { Button } from "@/components/shadcn/ui/button";
 
 interface LocalDBAuthFormProps {}
-export interface LocalDBAuthResponse{
-    result: {
-        database: [{
-            datname: string;
-        }];
-    }|null;
-    error: string|null;
-}
 
 export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   const [input, setInput] = useState<LocalDBAuthProps>({
@@ -53,24 +45,31 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       return { result: null, error: error.message };
     }
   });
-
-  
-  const mutation = useMutation(async (vars: LocalDBAuthProps) => {
+  const mutation = useSSM(async (ctx, vars: LocalDBAuthProps) => {
     try {
-      
-     const res = await fetch("/api/db",{
-      method: "POST",
-      body: JSON.stringify(vars),
-     }).then((res) => {
-      if(!res.ok){
-        throw new Error(res.statusText)
-      }
-      return res.json() as Promise<LocalDBAuthResponse>;
-    })
-      return { result:res , error: null };
+      // console.log(" ===  ctx ==== ", ctx);
+      // console.log(" ===  vars ==== ", vars);
+      console.log(" ===  cookie ==== ", ctx.cookie);
+      console.log(" ===  setCookie ==== ", ctx.setCookie);
+
+      const sql = postgres({
+        host: input.db_host,
+        user: input.db_user,
+        password: input.db_password,
+        database: input.db_name,
+        idle_timeout: 20,
+        max_lifetime: 60 * 30,
+      });
+      const database = (await sql`SELECT datname FROM pg_database`) as any as [
+        { datname: string },
+      ];
+
+      console.log(" === succesfull local postgres connection == ", database);
+      ctx?.setCookie("db_user", JSON.stringify(vars));
+      return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === local postgres connection error == ", error.message);
-      // ctx?.deleteCookie("db_user");
+      ctx?.deleteCookie("db_user");
       return { result: null, error: error.message };
     }
   });

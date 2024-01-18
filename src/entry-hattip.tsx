@@ -8,15 +8,11 @@ import {
 import { uneval } from "devalue";
 import { cookie } from "@hattip/cookie";
 
-
 export async function beforePageLuciaMiddleware(ctx: RequestContext<unknown>) {}
 
 export default createRequestHandler({
   middleware: {
-    beforePages: [
-      cookie(),
- 
-    ],
+    beforePages: [cookie()],
     beforeApiRoutes: [],
     beforeNotFound: [],
   },
@@ -60,7 +56,7 @@ export default createRequestHandler({
           },
         });
 
-        const queryClient:QueryClient = new QueryClient({
+        const queryClient: QueryClient = new QueryClient({
           mutationCache: new MutationCache({
             onSuccess: async (data, variable, context, mutation) => {
               if (Array.isArray(mutation.meta?.invalidates)) {

@@ -20,7 +20,7 @@ export interface RemoteDBAuthProps {
   connection_url: string;
 }
 
-export type DbAuthProps = LocalDBAuthProps | RemoteDBAuthProps;
+type DbAuthProps = LocalDBAuthProps | RemoteDBAuthProps;
 export default function LoginPage({}: PageProps) {
   return (
     <div className="w-full flex items-center justify-center overflow-auto">
