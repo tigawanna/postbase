@@ -13,7 +13,7 @@ import postgres from "postgres";
 import { useSSM } from "rakkasjs";
 import { useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
-import { RemoteDBAuthProps } from "@/lib/pg/pg";
+import { RemoteDBAuthProps, deletePGCookie, setPGCookie } from "@/lib/pg/pg";
 
 interface RemoteDBAuthFormProps {}
 
@@ -35,16 +35,18 @@ export function RemoteDBAuthForm({}: RemoteDBAuthFormProps) {
       ];
 
       console.log(" === succesfull remote postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars), {
-        sameSite: "strict",
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
+      // ctx?.setCookie("pg_config", JSON.stringify(vars), {
+      //   sameSite: "strict",
+      //   httpOnly: false,
+      //   maxAge: 60 * 60 * 24 * 30,
+      //   path: "/",
+      // });
+       setPGCookie(ctx, JSON.stringify(vars));
       return { result: { database }, error: null };
     } catch (error: any) {
       console.log(" === remote postgres connection error == ", error.message);
       // ctx?.deleteCookie("pg_config");
+      deletePGCookie(ctx);
       return { result: null, error: error.message };
     }
   });

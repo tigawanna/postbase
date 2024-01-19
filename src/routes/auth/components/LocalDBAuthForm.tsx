@@ -5,14 +5,14 @@ import { UserCombobox } from "@/routes/pg/components/UserCombobox";
 import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import postgres from "postgres";
-import { useSSQ, useSSM, Redirect, usePageContext } from "rakkasjs";
+import { useSSQ, useSSM, Redirect, usePageContext, useQueryClient } from "rakkasjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
-import { LocalDBAuthProps } from "@/lib/pg/pg";
+import { LocalDBAuthProps, deletePGCookie, setPGCookie } from "@/lib/pg/pg";
 
 interface LocalDBAuthFormProps {}
-
 export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
+  const qc = useQueryClient()
   const page_ctx = usePageContext()
   const [input, setInput] = useState<LocalDBAuthProps>({
     local_or_remote: "local",
@@ -48,39 +48,30 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   });
   const mutation = useSSM(async (ctx, vars: LocalDBAuthProps) => {
     try {
-      // console.log(" ===  ctx ==== ", ctx);
-      // console.log(" ===  vars ==== ", vars);
-      // console.log(" ===  cookie ==== ", ctx.cookie);
-      // console.log(" ===  setCookie ==== ", ctx.setCookie);
-
-      const sql = postgres({
+    const sql = postgres({
         host: input.db_host,
         user: input.db_user,
         password: input.db_password,
         database: input.db_name,
         idle_timeout: 20,
-        max_lifetime: 60 * 30,
-      });
+       });
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
       ];
 
       console.log(" === succesfull local postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars), {
-        sameSite: "strict",
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
-      return { result: { succes: true, database }, error: null };
+      setPGCookie(ctx, JSON.stringify(vars));
+      // qc.setQueryData("pg_config", vars)
+      return { result: { succes: true,config:vars, database }, error: null };
     } catch (error: any) {
-      console.log(" === local postgres connection error == ", error.message);
+      // console.log(" === local postgres connection error == ", error.message);
       // ctx?.deleteCookie("pg_config");
+      deletePGCookie(ctx);
       return { result: null, error: error.message };
     }
   });
 
-  console.log(" ===== local db connection muation data === ", mutation.data);
+  // console.log(" ===== local db connection muation data === ", mutation.data);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInput({
@@ -93,10 +84,11 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   const users = query?.data?.result?.users;
 
   if(mutation.data?.result?.succes){
+    // qc.setQueryData("pg_config", mutation.data?.result?.config)
     const redirect_search_param = page_ctx.url.searchParams.get("redirect");
-    console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
+    // console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
     const redirect_to = redirect_search_param ?? "/";
-    return <Redirect href={redirect_to}/>
+    return <Redirect href={redirect_to} />;
   }
   return (
     <div className="w-full h-full  overflow-auto">

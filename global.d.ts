@@ -7,12 +7,12 @@ declare module "rakkasjs" {
     interface PageLocals {
         /** My application-specific stuff */
         pb: TypedPocketBase<Schema>;
-        pg: DbAuthProps
+        pg: DbAuthProps|null
     }
     interface ServerSideLocals {
         /** My application-specific stuff */
        pb: TypedPocketBase<Schema>;
-       pg: DbAuthProps
+       pg: DbAuthProps|null
     }
 }
 

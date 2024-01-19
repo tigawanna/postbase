@@ -8,9 +8,11 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
   // console.log("user in auth route  ====== ",user)
   const locals = ctx.locals;
   const pg_config = locals?.pg;
+  const pg_confi=ctx.queryClient.getQueryData("pg_config")
   // const pg_route_cookie_string = parse(document.cookie);
   // const pg_config = safeDestr<DbAuthProps>(pg_route_cookie_string?.pg_config);
   console.log("==== auth route guard locals ======= ", pg_config)
+  console.log(" === auth route guard queryClient  ===== ",pg_confi)
   if (pg_config) {
     console.log("==== auth route guard true redirecting to  ======= ",ctx.url.origin)
     return {

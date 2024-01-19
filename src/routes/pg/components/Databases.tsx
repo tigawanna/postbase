@@ -9,12 +9,12 @@ export function Databases({}: DatabasesProps) {
   const query = useSSQ(async (ctx) => {
     try {
       // console.log("databases use ssq locals == ", ctx.cookie);
-     const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
       if (!config) {
         return { result: null, error: "no config" };
       }
       const sql = postgresInstance(config);
-      if(config.local_or_remote === "remote"){
+      if (config.local_or_remote === "remote") {
         return {
           result: { redirect: `/pg/dbs/${sql.options.database}` },
           error: null,
@@ -38,10 +38,9 @@ export function Databases({}: DatabasesProps) {
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
 
-if(query.data?.result?.redirect){
-  return <Redirect href={query.data?.result?.redirect} />;
-}
-
+  if (query.data?.result?.redirect) {
+    return <Redirect href={query.data?.result?.redirect} />;
+  }
 
   return (
     <div className="w-full h-full flex flex-col gap-5 ">

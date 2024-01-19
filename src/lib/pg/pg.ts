@@ -1,4 +1,5 @@
 import postgres from "postgres";
+import { RequestContext } from "rakkasjs";
 
 export function postgresInstance(options: DbAuthProps) {
   if (options.local_or_remote === "local") {
@@ -30,3 +31,17 @@ export interface RemoteDBAuthProps {
 }
 
 export type DbAuthProps = LocalDBAuthProps | RemoteDBAuthProps;
+
+export function setPGCookie(ctx: RequestContext<unknown>, value: string) {
+  ctx?.setCookie("pg_cookie", value, {
+    sameSite: "strict",
+    httpOnly: false,
+    maxAge: 60 * 60 * 24 * 30,
+    path: "/",
+  });
+}
+export function deletePGCookie(ctx: RequestContext<unknown>) {
+  ctx?.deleteCookie("pg_cookie", {
+    path: "/",
+  });
+}

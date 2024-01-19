@@ -22,7 +22,7 @@ import postgres from "postgres";
 import { Button } from "@/components/shadcn/ui/button";
 import { isString } from "@/utils/helpers/string";
 import { hotToast } from "@/utils/helpers/toast";
-import { LocalDBAuthProps } from "@/lib/pg/pg";
+import { LocalDBAuthProps, deletePGCookie, setPGCookie } from "@/lib/pg/pg";
 
 interface PickDatabaseDialogProps {
   datname: string;
@@ -56,6 +56,7 @@ export function PickDatabaseDialog({
       vars: { datname: string; input: { user: string; password: string } },
     ) => {
       try {
+        console.log(" ==== logging into DB === ", vars);
         const sql = postgres({
           host: "localhost",
           user: vars.input.user,
@@ -73,9 +74,11 @@ export function PickDatabaseDialog({
           db_user: vars.input.user,
           local_or_remote: "local",
         };
-        ctx.setCookie("pg_config", JSON.stringify(pg_cookie));
+        setPGCookie(ctx, JSON.stringify(pg_cookie));
+        // ctx.setCookie("pg_config", JSON.stringify(pg_cookie));
         return { data: "Successfully logged in", error: null };
       } catch (error: any) {
+        deletePGCookie(ctx);
         console.log(" ==== error logging into DB === ", error.message);
         return { data: undefined, error: error.message };
       }
