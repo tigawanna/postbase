@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { useSSQ } from "rakkasjs";
+import { Redirect, useSSQ } from "rakkasjs";
 import { PickDatabaseDialog } from "./PickDatabaseDialog";
 import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
 import { safeDestr } from "destr";
@@ -14,6 +14,12 @@ export function Databases({}: DatabasesProps) {
         return { result: null, error: "no config" };
       }
       const sql = postgresInstance(config);
+      if(config.local_or_remote === "remote"){
+        return {
+          result: { redirect: `/pg/dbs/${sql.options.database}` },
+          error: null,
+        };
+      }
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
       ];
@@ -31,6 +37,12 @@ export function Databases({}: DatabasesProps) {
 
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
+
+if(query.data?.result?.redirect){
+  return <Redirect href={query.data?.result?.redirect} />;
+}
+
+
   return (
     <div className="w-full h-full flex flex-col gap-5 ">
       <h1 className="text-3xl font-bold text-center w-full ">Databases</h1>

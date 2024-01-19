@@ -16,11 +16,11 @@ export default function OneTableLayout({ children, params, url }: LayoutProps) {
   ];
   const pathname = url.pathname;
   const types_route = url.pathname;
-  console.log("tyeps route  ==  ",url.toString())
+  // console.log("tyeps route  ==  ",url.toString())
   return (
     <div className="w-full h-full min-h-screen flex flex-col items-center justify-center">
       <div className="text-xl  w-full flex justify-between h-fit p-1 bg-base-300">
-        <div className="text-xl  w-full  ">{params.table} table</div>
+        <div className="text-xl  w-full  text-yellow-700">{params.table} table</div>
         <div className="w-full flex gap-3 text-sm">
           {paths.map((path) => {
             const new_url = new URL(url);

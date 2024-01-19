@@ -9,9 +9,18 @@ import { uneval } from "devalue";
 import { cookie } from "@hattip/cookie";
 import { safeDestr } from "destr";
 import { DbAuthProps } from "./lib/pg/pg";
+import { json } from "@hattip/response";
 
 
-export async function beforePageLuciaMiddleware(ctx: RequestContext<unknown>) {}
+export async function pgConfigCheck(ctx: RequestContext<unknown>) {
+  const pg_config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+  if (!pg_config) {
+    return {
+      redirect:"/auth/"
+    }
+  }
+}
+
 
 export default createRequestHandler({
   middleware: {

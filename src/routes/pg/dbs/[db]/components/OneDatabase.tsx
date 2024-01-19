@@ -48,8 +48,16 @@ export function OneDatabase({
   if (query.data.error) {
     return <Redirect href="/pg/dbs" />;
   }
-  // console.log(" === tabless == ", query.data.tables);
 
+  if (query.data?.tables&&query.data?.tables?.length<1) {
+    return (
+      <div className="w-full h-full flex flex-col  items-center  relative gap-2 ">
+        <div className="text-4xl font-bold p-2 absolute top-5">{db_name}</div>
+        <div className="bg-base-300 rounded-lg absolute top-[40%] p-5">No records yet</div>
+      </div>
+    );
+  }
+  console.log(" ===== query.tables  ======= ", query.data.tables);
   return (
     <div className="w-full flex flex-col  items-center gap-2 overflow-y-scroll h-screen">
       <div className="text-4xl font-bold p-2">{db_name}</div>

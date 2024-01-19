@@ -5,7 +5,7 @@ import { UserCombobox } from "@/routes/pg/components/UserCombobox";
 import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import postgres from "postgres";
-import { useSSQ, useSSM } from "rakkasjs";
+import { useSSQ, useSSM, Redirect, usePageContext } from "rakkasjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
 import { LocalDBAuthProps } from "@/lib/pg/pg";
@@ -13,6 +13,7 @@ import { LocalDBAuthProps } from "@/lib/pg/pg";
 interface LocalDBAuthFormProps {}
 
 export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
+  const page_ctx = usePageContext()
   const [input, setInput] = useState<LocalDBAuthProps>({
     local_or_remote: "local",
     db_host: "localhost",
@@ -65,10 +66,13 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       ];
 
       console.log(" === succesfull local postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(vars),{
-        sameSite:"strict",httpOnly:false,maxAge:60*60*24*30,path:"/"
+      ctx?.setCookie("pg_config", JSON.stringify(vars), {
+        sameSite: "strict",
+        httpOnly: false,
+        maxAge: 60 * 60 * 24 * 30,
+        path: "/",
       });
-      return { result: { database }, error: null };
+      return { result: { succes: true, database }, error: null };
     } catch (error: any) {
       console.log(" === local postgres connection error == ", error.message);
       // ctx?.deleteCookie("pg_config");
@@ -87,6 +91,13 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
 
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
+
+  if(mutation.data?.result?.succes){
+    const redirect_search_param = page_ctx.url.searchParams.get("redirect");
+    console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
+    const redirect_to = redirect_search_param ?? "/";
+    return <Redirect href={redirect_to}/>
+  }
   return (
     <div className="w-full h-full  overflow-auto">
       <Card className="w-full">
@@ -172,7 +183,10 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => mutation.mutate(input)} disabled={mutation.isLoading}>
+          <Button
+            onClick={() => mutation.mutate(input)}
+            disabled={mutation.isLoading}
+          >
             Connect {mutation.isLoading && <Loader className="animate-spin" />}
           </Button>
         </CardFooter>
