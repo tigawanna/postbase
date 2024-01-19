@@ -9,7 +9,7 @@ import {
 } from "@/components/shadcn/ui/dialog";
 import { Input } from "@/components/shadcn/ui/input";
 import { Label } from "@/components/shadcn/ui/label";
-import { Link, navigate, usePageContext, useSSM } from "rakkasjs";
+import { navigate, usePageContext, useSSM } from "rakkasjs";
 import { useEffect, useState } from "react";
 import { UserCombobox } from "./UserCombobox";
 import {
@@ -22,6 +22,7 @@ import postgres from "postgres";
 import { Button } from "@/components/shadcn/ui/button";
 import { isString } from "@/utils/helpers/string";
 import { hotToast } from "@/utils/helpers/toast";
+import { LocalDBAuthProps } from "@/lib/pg/pg";
 
 interface PickDatabaseDialogProps {
   datname: string;
@@ -60,28 +61,37 @@ export function PickDatabaseDialog({
           user: vars.input.user,
           password: vars.input.password,
           database: vars.datname,
+          idle_timeout: 20,
         });
         const tables =
           await sql`SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'`;
         console.log("===== db connected === ", tables);
-        return { data:"Successfully logged in", error: null };
+        const pg_cookie: LocalDBAuthProps = {
+          db_host: "localhost",
+          db_name: vars.datname,
+          db_password: vars.input.password,
+          db_user: vars.input.user,
+          local_or_remote: "local",
+        };
+        ctx.setCookie("pg_config", JSON.stringify(pg_cookie));
+        return { data: "Successfully logged in", error: null };
       } catch (error: any) {
         console.log(" ==== error logging into DB === ", error.message);
-        return { data:undefined,error: error.message };
+        return { data: undefined, error: error.message };
       }
     },
   );
 
-  const mutation_error = mutation.data?.error;
-    const page_ctx = usePageContext();
-    const db_page_url = new URL(page_ctx.url);
-    useEffect(() => {
-    if (isString(mutation_error) && mutation.isError) {
+  const mutation_error = mutation.data?.error || mutation.error;
+  const page_ctx = usePageContext();
+  const db_page_url = new URL(page_ctx.url);
+  useEffect(() => {
+    if (isString(mutation_error) || mutation.isError) {
       hotToast({
         title: "Error",
         description: mutation_error,
         type: "error",
-      })
+      });
     }
     if (mutation.isSuccess) {
       hotToast({
@@ -89,15 +99,12 @@ export function PickDatabaseDialog({
         description: mutation.data?.data ?? "",
         type: "success",
       });
-        db_page_url.pathname = `/pg/dbs/${datname}`;
-        db_page_url.searchParams.set("db", datname);
-        db_page_url.searchParams.set("name", input.user);
-        db_page_url.searchParams.set("password", input.password);
+      db_page_url.pathname = `/pg/dbs/${datname}`;
       navigate(db_page_url.toString());
     }
   }, [mutation]);
 
-return (
+  return (
     <Dialog>
       <DialogTrigger asChild>
         <div className="w-full flex items-center justify-center bg-base-200 hover:bg-base-300 py-1 px-2 gap-5 ">
@@ -173,7 +180,11 @@ return (
           <Button
             className="rounded-lg px-5 py-1.5 bg-base-200 hover:bg-base-300 hover:text-sky-400 
             flex gap-4 place-content-center"
-            disabled={!isString(input.user) || !isString(input.password) || mutation.isLoading}
+            disabled={
+              !isString(input.user) ||
+              !isString(input.password) ||
+              mutation.isLoading
+            }
             onClick={() => {
               if (isString(input.user) || isString(input.password)) {
                 mutation.mutate({ datname, input });

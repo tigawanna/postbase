@@ -1,28 +1,22 @@
 import postgres from "postgres";
 import { Redirect, useSSQ } from "rakkasjs";
 import { PickTableColumnDialog } from "./PickTableColumn";
+import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
+import { safeDestr } from "destr";
 
 interface OneDatabaseProps {
   db_name: string;
-  db_user: string;
-  db_password: string;
+
 }
 
 export function OneDatabase({
   db_name,
-  db_password,
-  db_user,
+
 }: OneDatabaseProps) {
   const query = useSSQ(async (ctx) => {
     try {
-      const sql = postgres({
-        host: "localhost",
-        user: db_user!,
-        password: db_password!,
-        database: db_name!,
-        idle_timeout: 20,
-        max_lifetime: 60 * 30,
-      });
+    const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const sql = postgresInstance(config)
       const tables = (await sql`
         SELECT table_name,
     (SELECT string_agg(column_name, ', ')

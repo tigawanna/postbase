@@ -1,3 +1,5 @@
+import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
+import { safeDestr } from "destr";
 import postgres from "postgres";
 import { navigate } from "rakkasjs";
 import { Redirect, usePageContext, useSSQ } from "rakkasjs";
@@ -7,31 +9,23 @@ import ReactPaginate from "react-paginate";
 interface OneTableRowsOffsetPagesProps {
   db_name: string;
   db_table: string;
-  db_user: string;
-  db_password: string;
   db_primary_column: string;
 }
 export function OneTableRowsOffsetPages({
   db_name,
   db_table,
   db_primary_column,
-  db_password,
-  db_user,
 }: OneTableRowsOffsetPagesProps) {
   const page_ctx = usePageContext();
   const url = page_ctx.url;
   const table_page = parseInt(url.searchParams.get("tp") ?? "1");
-   const[sortColumn, setSortColumn] = useState(db_primary_column);
-const [sortDirection, setSortDirection] = useState("");
+  const [sortColumn, setSortColumn] = useState(db_primary_column);
+  const [sortDirection, setSortDirection] = useState("");
   const query = useSSQ(async (ctx) => {
     try {
       const offset = (table_page - 1) * 10;
-      const sql = postgres({
-        host: "localhost",
-        user: db_user!,
-        password: db_password!,
-        database: db_name!,
-      });
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const sql = postgresInstance(config);
       const rows = (await sql`
       SELECT * from ${sql(db_table)} 
       ORDER BY ${sql(db_primary_column)}
@@ -40,7 +34,10 @@ const [sortDirection, setSortDirection] = useState("");
       //   console.log(" === tabless == ", rows);
       return { rows, error: null };
     } catch (error: any) {
-      console.log(" === error == ", error.message);
+      console.log(
+        " === useSSQ OneTableRowsOffsetPages error == ",
+        error.message,
+      );
       return { rows: null, error: error.message };
     }
   });
@@ -78,7 +75,6 @@ const [sortDirection, setSortDirection] = useState("");
     return <Redirect href={redirect_url.toString()} />;
   }
 
-
   if (!rows || !sortedRows) {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -89,13 +85,7 @@ const [sortDirection, setSortDirection] = useState("");
   return (
     <div className="w-full h-screen overflow-auto space-y-2">
       <div className="w-full py-3 flex flex-col">
-        <OneTableRowsOffsetpagesPaginator
-          db_name={db_name}
-          db_table={db_table}
-          db_user={db_user}
-          db_password={db_password}
-          db_primary_column={db_primary_column}
-        />
+        <OneTableRowsOffsetpagesPaginator db_table={db_table} />
       </div>
       <table className="w-full table ">
         <thead className="sticky top-0 ">
@@ -150,32 +140,18 @@ const [sortDirection, setSortDirection] = useState("");
         </tbody>
       </table>
       <div className="w-full py-3 flex flex-col">
-        <OneTableRowsOffsetpagesPaginator
-          db_name={db_name}
-          db_table={db_table}
-          db_user={db_user}
-          db_password={db_password}
-          db_primary_column={db_primary_column}
-        />
+        <OneTableRowsOffsetpagesPaginator db_table={db_table} />
       </div>
     </div>
   );
 }
 
 interface OneTableRowsOffsetpagesPaginatorProps {
-  db_name: string;
   db_table: string;
-  db_user: string;
-  db_password: string;
-  db_primary_column: string;
 }
 
 export function OneTableRowsOffsetpagesPaginator({
-  db_name,
   db_table,
-  db_primary_column,
-  db_password,
-  db_user,
 }: OneTableRowsOffsetpagesPaginatorProps) {
   const page_ctx = usePageContext();
   const url = page_ctx.url;
@@ -183,18 +159,17 @@ export function OneTableRowsOffsetpagesPaginator({
   const query = useSSQ(async (ctx) => {
     try {
       const offset = (2 - 1) * 10;
-      const sql = postgres({
-        host: "localhost",
-        user: db_user!,
-        password: db_password!,
-        database: db_name!,
-      });
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const sql = postgresInstance(config);
       const rows = (await sql`
       SELECT COUNT(*) FROM ${sql(db_table)}`) as any as [{ count: number }];
-      console.log(" === tabless == ", rows);
+      // console.log(" === table rows count == ", rows);
       return { rows, error: null };
     } catch (error: any) {
-      console.log(" === error == ", error.message);
+      console.log(
+        " === useSSQ OneTableRowsOffsetpagesPaginator error == ",
+        error.message,
+      );
       return { rows: null, error: error.message };
     }
   });
