@@ -56,7 +56,7 @@ export function PickDatabaseDialog({
       vars: { datname: string; input: { user: string; password: string } },
     ) => {
       try {
-        console.log(" ==== logging into DB === ", vars);
+        // console.log(" ==== logging into DB === ", vars);
         const sql = postgres({
           host: "localhost",
           user: vars.input.user,
@@ -110,9 +110,10 @@ export function PickDatabaseDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="w-full flex items-center justify-center bg-base-200 hover:bg-base-300 py-1 px-2 gap-5 ">
-          <div className="text-lg font-bold text-center">{datname}</div>
-          <ChevronRightSquare />
+        <div className="">
+          <div className="text-xl flex  font-bold text-center justify-center items-center gap-4">
+            {datname} <ChevronRightSquare />
+          </div>
         </div>
         {/* <Button variant="outline">Open</Button> */}
       </DialogTrigger>

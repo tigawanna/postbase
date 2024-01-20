@@ -1,8 +1,10 @@
-import postgres from "postgres";
+
 import { Redirect, useSSQ } from "rakkasjs";
-import { PickDatabaseDialog } from "./PickDatabaseDialog";
 import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
 import { safeDestr } from "destr";
+import { PickDatabaseDialog } from "./PickDatabaseDialog";
+
+
 interface DatabasesProps {}
 
 export function Databases({}: DatabasesProps) {
@@ -26,8 +28,8 @@ export function Databases({}: DatabasesProps) {
       const users = (await sql`SELECT * FROM pg_catalog.pg_user`) as any as [
         { usename: string },
       ];
-      console.log(" === databases == ", database);
-      console.log(" === users == ", users);
+      // console.log(" === databases == ", database);
+      // console.log(" === users == ", users);
       return { result: { database, users }, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);
@@ -46,7 +48,7 @@ export function Databases({}: DatabasesProps) {
   return (
     <div className="w-full h-full flex flex-col gap-5 ">
       <h1 className="text-3xl font-bold text-center w-full ">Databases</h1>
-      {error && (
+      {/* {error && (
         <div
           className="h-full w-full flex flex-col justify-center items-center gap-5 
          ">
@@ -54,19 +56,20 @@ export function Databases({}: DatabasesProps) {
             {error}
           </h1>
         </div>
-      )}
+      )} */}
       {dbs && dbs.length > 0 && (
-        <div className="w-full min-h-[70vh] md:min-h-[40vh] h-fit flex items-center justify-center">
-          <ul className="w-full  flex flex-wrap gap-2 items-center justify-center px-4">
+        <div className="w-full min-h-[70vh] md:min-h-[40vh]  flex overflow-auto pb-5">
+          <ul className="w-full  flex flex-wrap gap-2  px-4">
             {dbs &&
               dbs?.map((db: { datname: string }) => {
                 return (
                   <li
                     key={db.datname}
-                    className=" min-w-[30%] flex  justify-center items-center
-                 flex-grow rounded-lg"
+                    className="w-full  md:w-[35%] lg:w-[25%]  flex justify-center items-center
+                     flex-grow rounded-lg h-[140px] bg-base-200 hover:bg-base-300 hover:text-accent "
                   >
                     <PickDatabaseDialog datname={db.datname} users={users} />
+                    {/* {db.datname} <ChevronRightSquare /> */}
                   </li>
                 );
               })}
@@ -75,4 +78,34 @@ export function Databases({}: DatabasesProps) {
       )}
     </div>
   );
+}
+
+
+interface DatabasesSuspenseProps {
+
+}
+
+const dbs = Array.from({length: 10}, (_, i) => `db_${i}`);
+export function DatabasesSuspenseFallBack({}:DatabasesSuspenseProps){
+return (
+  <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full min-h-[70vh] md:min-h-[40vh]  flex overflow-auto pb-5">
+      <ul className="w-full  flex flex-wrap gap-2  px-4">
+        {dbs &&
+          dbs?.map((_,idx) => {
+            return (
+              <li
+                key={idx}
+                className="w-full  md:w-[35%] lg:w-[25%]  flex justify-center items-center skeleton
+                     flex-grow rounded-lg h-[140px] bg-base-200 hover:bg-base-300 hover:text-accent "
+              >
+                {/* <PickDatabaseDialog datname={db.datname} users={users} /> */}
+                
+              </li>
+            );
+          })}
+      </ul>
+    </div>
+  </div>
+);
 }
