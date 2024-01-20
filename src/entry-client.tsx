@@ -14,24 +14,22 @@ startClient({
       // Do something before starting the client
     },
     extendPageContext(ctx) {
-      if (document?.cookie) {
-        const cookie = parse(document?.cookie);
-        if (cookie) {
-          const pg_config = safeDestr<DbAuthProps>(cookie?.pg_config);
-          // console.log("  ===  entry-client pg_config =====", pg_config);
-          console.log(
-            "  === setting pg_config to entry-client locals  =====",
-            pg_config,
-          );
-          ctx.locals.pg = pg_config;
-          console.log("  ===  entry-client locals.pg =====", ctx.locals.pg);
-          ctx.queryClient.setQueryData("pg_config", pg_config);
-        } else {
-          console.log("  ===  entry-client no cookie =====");
-          ctx.queryClient.setQueryData("pg_config", null);
-          ctx.locals.pg = null;
-        }
-      }
+      // if (document?.cookie) {
+      //   const cookie = parse(document?.cookie);
+      //   if (cookie) {
+      //     const pg_config = safeDestr<DbAuthProps>(cookie?.pg_cookie);
+       
+      //     // console.log("  ===  entry-client pg_config =====", pg_config);
+      //     ctx.locals.pg = pg_config;
+      //     console.log("  ===  entry-client cooki_pg config =====", cookie,pg_config);
+      //     ctx.queryClient.setQueryData("pg_config", pg_config);
+      //   } else {
+      //     console.log("  ===  entry-client no cookie =====");
+      //     ctx.queryClient.setQueryData("pg_config", null);
+      //     ctx.locals.pg = null;
+      //   }
+      // }
+
     },
   },
 });

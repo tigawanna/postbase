@@ -9,10 +9,14 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
   // console.log("==== pg route guard ctx.requestContext?.cookie ======= ", ctx.requestContext?.cookie)
   // const pg_route_cookie_string = parse(document.cookie);
   // const pg_config = safeDestr<DbAuthProps>(pg_route_cookie_string?.pg_config);
-  const locals = ctx.locals;
-  const pg_config = locals?.pg;
+  // const locals = ctx.locals;
+  // const pg_config = locals?.pg;
   // console.log("==== pg route guard locals ======= ", pg_config)
   // console.log(" === pg rour guard URL object  ===== ", ctx.url)
+  const pg_config = ctx.queryClient.getQueryData(
+    "pg_config",
+  ) as DbAuthProps | null;
+  
   if (!pg_config) {
     const new_url = new URL(ctx.url)
     new_url.pathname = "/auth";

@@ -1,19 +1,33 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/shadcn/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/shadcn/ui/card";
 import { Input } from "@/components/shadcn/ui/input";
 import { LocalDBCombobox } from "@/routes/pg/components/LocalDBCombobox";
 import { UserCombobox } from "@/routes/pg/components/UserCombobox";
 import { Label } from "@radix-ui/react-label";
 import { Loader } from "lucide-react";
 import postgres from "postgres";
-import { useSSQ, useSSM, Redirect, usePageContext, useQueryClient } from "rakkasjs";
+import {
+  useSSQ,
+  useSSM,
+  Redirect,
+  usePageContext,
+  useQueryClient,
+  navigate,
+} from "rakkasjs";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
 import { LocalDBAuthProps, deletePGCookie, setPGCookie } from "@/lib/pg/pg";
 
 interface LocalDBAuthFormProps {}
 export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
-  const qc = useQueryClient()
-  const page_ctx = usePageContext()
+  const qc = useQueryClient();
+  const page_ctx = usePageContext();
   const [input, setInput] = useState<LocalDBAuthProps>({
     local_or_remote: "local",
     db_host: "localhost",
@@ -38,8 +52,8 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       const users = (await sql`SELECT * FROM pg_catalog.pg_user`) as any as [
         { usename: string },
       ];
-      console.log(" === databases == ", database);
-      console.log(" === users == ", users);
+      // console.log(" === databases == ", database);
+      // console.log(" === users == ", users);
       return { result: { database, users }, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);
@@ -48,21 +62,20 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   });
   const mutation = useSSM(async (ctx, vars: LocalDBAuthProps) => {
     try {
-    const sql = postgres({
+      const sql = postgres({
         host: input.db_host,
         user: input.db_user,
         password: input.db_password,
         database: input.db_name,
         idle_timeout: 20,
-       });
+      });
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
       ];
 
-      console.log(" === succesfull local postgres connection == ", database);
       setPGCookie(ctx, JSON.stringify(vars));
       // qc.setQueryData("pg_config", vars)
-      return { result: { succes: true,config:vars, database }, error: null };
+      return { result: { succes: true, config: vars, database }, error: null };
     } catch (error: any) {
       // console.log(" === local postgres connection error == ", error.message);
       // ctx?.deleteCookie("pg_config");
@@ -83,13 +96,13 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
 
-  if(mutation.data?.result?.succes){
-    // qc.setQueryData("pg_config", mutation.data?.result?.config)
-    const redirect_search_param = page_ctx.url.searchParams.get("redirect");
-    // console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
-    const redirect_to = redirect_search_param ?? "/";
-    return <Redirect href={redirect_to} />;
-  }
+  // if (mutation.data?.result?.succes) {
+  //   // qc.setQueryData("pg_config", mutation.data?.result?.config)
+  //   const redirect_search_param = page_ctx.url.searchParams.get("redirect");
+  //   // console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
+  //   const redirect_to = redirect_search_param ?? "/";
+  //   return <Redirect href={redirect_to} />;
+  // }
   return (
     <div className="w-full h-full  overflow-auto">
       <Card className="w-full">
@@ -176,7 +189,17 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
         </CardContent>
         <CardFooter>
           <Button
-            onClick={() => mutation.mutate(input)}
+            onClick={() => {
+              mutation.mutateAsync(input).then((res) => {
+                if (res.result) {
+                  qc.setQueryData("pg_config", res.result.config);
+                  const redirect_search_param =
+                    page_ctx.url.searchParams.get("redirect");
+                  const redirect_to = redirect_search_param ?? "/";
+                  navigate(redirect_to);
+                }
+              });
+            }}
             disabled={mutation.isLoading}
           >
             Connect {mutation.isLoading && <Loader className="animate-spin" />}

@@ -39,9 +39,11 @@ export function setPGCookie(ctx: RequestContext<unknown>, value: string) {
     maxAge: 60 * 60 * 24 * 30,
     path: "/",
   });
+  console.log( " ============= set pg cookie  ============ ", ctx.cookie?.pg_cookie);
 }
 export function deletePGCookie(ctx: RequestContext<unknown>) {
   ctx?.deleteCookie("pg_cookie", {
     path: "/",
   });
+  console.log( " ============= deleted pg cookie  ============ ", ctx.cookie?.pg_cookie);
 }
