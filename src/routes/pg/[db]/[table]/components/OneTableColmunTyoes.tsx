@@ -2,6 +2,7 @@ import { useSSQ } from "rakkasjs";
 import { pascal } from "radash";
 import { codeToHtml } from "shikiji";
 import { getTextFromFileWithImports } from "@/utils/helpers/fs";
+import { CopyToClipBoard } from "@/components/form/copy";
 
 interface OneTableColmunTyoesProps {
   db_table: string;
@@ -57,8 +58,12 @@ export function OneTableColmunTyoes({ db_table }: OneTableColmunTyoesProps) {
   }
   return (
     <div className="w-full max-h-[80vh] overflow-auto">
-      <div className="">
+      <div className="w-full flex flex-col justify-end items-end">
+        <CopyToClipBoard text={query.data?.types} className="sticky top-0 right-5 w-fit"/>
+      <div className="w-full flex flex-col ">
+
         <code dangerouslySetInnerHTML={{ __html: query.data?.html }}></code>
+      </div>
       </div>
     </div>
   );
