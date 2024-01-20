@@ -12,7 +12,13 @@ export function OneDatabase({ db_name }: OneDatabaseProps) {
     console.log("This is a one database ", db_name);
     try {
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
-      const sql = postgresInstance(config);
+     if (!config || !config?.local_or_remote) {
+       return { rows: null, error: "no config" };
+     }
+     const sql = postgresInstance(config);
+     if (!sql) {
+       return { rows: null, error: "no config" };
+     }
       const tables = (await sql`
         SELECT table_name,
     (SELECT string_agg(column_name, ', ')

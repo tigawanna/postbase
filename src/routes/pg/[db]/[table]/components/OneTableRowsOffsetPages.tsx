@@ -25,7 +25,13 @@ export function OneTableRowsOffsetPages({
     try {
       const offset = (table_page - 1) * 10;
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
+      if(!config || !config?.local_or_remote) {
+        return { rows: null, error: "no config"}
+      }
       const sql = postgresInstance(config);
+     if (!sql) {
+       return { rows: null, error: "no config" };
+     }
       const rows = (await sql`
       SELECT * from ${sql(db_table)} 
       ORDER BY ${sql(db_primary_column)}
@@ -70,7 +76,7 @@ export function OneTableRowsOffsetPages({
 
   if (query.data.error) {
     const redirect_url = page_ctx.url;
-    redirect_url.pathname = `pg/dbs/${db_name}`;
+    redirect_url.pathname = `pg/${db_name}`;
     console.log("redirecting to ", redirect_url.toString());
     return <Redirect href={redirect_url.toString()} />;
   }
@@ -160,7 +166,13 @@ export function OneTableRowsOffsetpagesPaginator({
     try {
       const offset = (2 - 1) * 10;
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
-      const sql = postgresInstance(config);
+          if (!config || !config?.local_or_remote) {
+            return { rows: null, error: "no config" };
+          }
+          const sql = postgresInstance(config);
+          if (!sql) {
+            return { rows: null, error: "no config" };
+          }
       const rows = (await sql`
       SELECT COUNT(*) FROM ${sql(db_table)}`) as any as [{ count: number }];
       // console.log(" === table rows count == ", rows);

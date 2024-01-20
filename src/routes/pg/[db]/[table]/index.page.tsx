@@ -1,4 +1,4 @@
-import { PageProps, Redirect } from "rakkasjs";
+import { PageProps, Redirect, navigate } from "rakkasjs";
 import {
   Tabs,
   TabsContent,
@@ -8,11 +8,24 @@ import {
 import { OneTableColmunTyoes } from "./components/OneTableColmunTyoes";
 import { OneTableRowsOffsetPages } from "./components/OneTableRowsOffsetPages";
 import { hotToast } from "@/utils/helpers/toast";
+import { useState, useTransition } from "react";
 
 export default function OneTablePage({ params, url }: PageProps) {
   const db_name = params.db;
   const db_table = params.table;
   const db_primary_column = url.searchParams.get("column");
+  const table_tab = url.searchParams.get("tab") ?? "list";
+  const  [currenttab,setCurrentTab]=useState(table_tab??"rows")
+  const [,startTransition]=useTransition()
+
+  function updtaeCurrentTab(tab:string){
+    const new_url = new URL(url);
+    new_url.searchParams.set("tab", tab);
+    startTransition(()=>{
+      navigate(new_url.toString())
+      setCurrentTab(tab)
+    })
+  }
 
   if (!db_name || !db_table || !db_primary_column) {
     const error_message = ()=>{
@@ -36,7 +49,7 @@ export default function OneTablePage({ params, url }: PageProps) {
       position: "bottom-center",
     })
     const redirect_url = url;
-    redirect_url.pathname = `pg/dbs/${db_name}`;
+    redirect_url.pathname = `pg/${db_name}`;
     return <Redirect href={redirect_url.toString()} />;
   }
 
@@ -48,7 +61,7 @@ export default function OneTablePage({ params, url }: PageProps) {
         db_primary_column={db_primary_column}
       /> */}
 
-      <Tabs defaultValue="types" className="w-full">
+      <Tabs defaultValue={currenttab} value={currenttab}  onValueChange={updtaeCurrentTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="list">List</TabsTrigger>
           <TabsTrigger value="types">Types</TabsTrigger>
