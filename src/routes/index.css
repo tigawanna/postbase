@@ -9,14 +9,14 @@
 }
 /* Hide the default scroll bar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 10px;
   height: 12px;
   border-radius: "50%";
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  @apply bg-base-content;
+  @apply bg-base-100 glass;
 }
 
 /* Handle */
