@@ -45,7 +45,7 @@ function Layout({ children }: LayoutProps) {
         <ClientSuspense fallback={<div></div>}>
           <Toaster />
         </ClientSuspense>
-        {import.meta.env.DEV && <ReactQueryDevtoolsProduction />}
+
       </div>
     </ErrorBoundaryComponent>
   );
@@ -59,12 +59,6 @@ Layout.preload = (ctx: PageContext) => {
   };
 };
 
-const ReactQueryDevtoolsProduction = React.lazy(() =>
-  import("@tanstack/react-query-devtools/build/modern/production.js").then(
-    (d) => ({
-      default: d.ReactQueryDevtools,
-    }),
-  ),
-);
+
 
 export default Layout;

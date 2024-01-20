@@ -1,26 +1,16 @@
 import { RequestContext, createRequestHandler } from "rakkasjs";
-import {
-  MutationCache,
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { uneval } from "devalue";
 import { cookie } from "@hattip/cookie";
 import { safeDestr } from "destr";
 import { DbAuthProps } from "./lib/pg/pg";
-import { json } from "@hattip/response";
-
 
 export async function pgConfigCheck(ctx: RequestContext<unknown>) {
   const pg_config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
   if (!pg_config) {
     return {
-      redirect:"/auth/"
-    }
+      redirect: "/auth/",
+    };
   }
 }
-
 
 export default createRequestHandler({
   middleware: {
@@ -33,17 +23,6 @@ export default createRequestHandler({
   createPageHooks(requestContext) {
     let queries = Object.create(null);
     return {
-      emitBeforeSsrChunk() {
-        if (Object.keys(queries).length === 0) return "";
-
-        // Emit a script that calls the global $TQS function with the
-        // newly fetched query data.
-
-        const queriesString = uneval(queries);
-        queries = Object.create(null);
-        return `<script>$TQS(${queriesString})</script>`;
-      },
-
       emitToDocumentHead() {
         const cookie_theme = requestContext?.cookie?.theme;
         return `
@@ -53,7 +32,7 @@ export default createRequestHandler({
         document.documentElement.setAttribute("data-theme", "${cookie_theme}");
       })();
      </script>
-     <script>$TQD=Object.create(null);$TQS=data=>Object.assign($TQD,data);</script>
+
   `;
       },
 
@@ -61,51 +40,25 @@ export default createRequestHandler({
         const request = ctx.requestContext?.request;
         if (!request) return;
 
-
         const cookie = requestContext.cookie;
         if (cookie?.pg_config) {
           console.log("  ===  entry-hatip cookie =====", cookie.pg_config);
           const pg_config = safeDestr<DbAuthProps>(cookie?.pg_config);
-          console.log("  === setting pg_config to entry-hattip locals  =====", pg_config);
+          console.log(
+            "  === setting pg_config to entry-hattip locals  =====",
+            pg_config,
+          );
           ctx.locals.pg = pg_config;
-          ctx.queryClient.setQueryData("pg_config",pg_config );
+          ctx.queryClient.setQueryData("pg_config", pg_config);
           console.log("  ===  entry-hatip locals.pg =====", ctx.locals.pg);
-        }else{
-          ctx.queryClient.setQueryData("pg_config",null );
-          ctx.locals.pg=null
+        } else {
+          ctx.queryClient.setQueryData("pg_config", null);
+          ctx.locals.pg = null;
         }
       },
 
       wrapApp(app) {
-        const queryCache = new QueryCache({
-          onSuccess(data, query) {
-            queries[query.queryHash] = data;
-          },
-        });
-
-        const queryClient: QueryClient = new QueryClient({
-          mutationCache: new MutationCache({
-            onSuccess: async (data, variable, context, mutation) => {
-              if (Array.isArray(mutation.meta?.invalidates)) {
-                return queryClient.invalidateQueries({
-                  queryKey: mutation.meta?.invalidates,
-                });
-              }
-            },
-          }),
-          queryCache,
-          defaultOptions: {
-            queries: {
-              staleTime: Infinity,
-              refetchOnWindowFocus: false,
-              refetchOnReconnect: false,
-            },
-          },
-        });
-
-        return (
-          <QueryClientProvider client={queryClient}>{app}</QueryClientProvider>
-        );
+        return app;
       },
 
       //   wrapSsrStream(stream) {

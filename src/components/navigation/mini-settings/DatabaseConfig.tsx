@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback } from "@/components/shadcn/ui/avatar";
 import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
 import { safeDestr } from "destr";
 import { useSSQ } from "rakkasjs";
-import { parse } from "pg-connection-string";
+
 import {
   DropdownMenuContent,
   DropdownMenuGroup,
