@@ -15,7 +15,7 @@ export function OneDatabase({
 }: OneDatabaseProps) {
   const query = useSSQ(async (ctx) => {
     try {
-    const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+    const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
       const sql = postgresInstance(config)
       const tables = (await sql`
         SELECT table_name,
@@ -57,7 +57,7 @@ export function OneDatabase({
       </div>
     );
   }
-  console.log(" ===== query.tables  ======= ", query.data.tables);
+  // console.log(" ===== query.tables  ======= ", query.data.tables);
   return (
     <div className="w-full flex flex-col  items-center gap-2 overflow-y-scroll h-screen">
       <div className="text-4xl font-bold p-2">{db_name}</div>
@@ -76,7 +76,7 @@ export function OneDatabase({
                 className="min-w-fit flex flex-col  bg-base-200 rounded-xl shadow-base-100 
                 shadow-lg p-4  flex-grow hover:bg-base-300 gap-3"
               >
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center flex-grow">
                   <h1 className="text-2xl font-bold ">{table.table_name}</h1>
                   <PickTableColumnDialog
                     // table_url={table_url}

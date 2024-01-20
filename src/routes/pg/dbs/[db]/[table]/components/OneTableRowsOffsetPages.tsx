@@ -24,7 +24,7 @@ export function OneTableRowsOffsetPages({
   const query = useSSQ(async (ctx) => {
     try {
       const offset = (table_page - 1) * 10;
-      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
       const sql = postgresInstance(config);
       const rows = (await sql`
       SELECT * from ${sql(db_table)} 
