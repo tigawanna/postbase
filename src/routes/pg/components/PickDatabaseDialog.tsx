@@ -66,7 +66,7 @@ export function PickDatabaseDialog({
         });
         const tables =
           await sql`SELECT table_name FROM information_schema.tables WHERE table_schema = \'public\'`;
-        console.log("===== db connected === ", tables);
+        // console.log("===== db connected === ", tables);
         const pg_cookie: LocalDBAuthProps = {
           db_host: "localhost",
           db_name: vars.datname,
@@ -88,24 +88,24 @@ export function PickDatabaseDialog({
   const mutation_error = mutation.data?.error || mutation.error;
   const page_ctx = usePageContext();
   const db_page_url = new URL(page_ctx.url);
-  useEffect(() => {
-    if (isString(mutation_error) || mutation.isError) {
-      hotToast({
-        title: "Error",
-        description: mutation_error,
-        type: "error",
-      });
-    }
-    if (mutation.isSuccess) {
-      hotToast({
-        title: "Success",
-        description: mutation.data?.data ?? "",
-        type: "success",
-      });
-      db_page_url.pathname = `/pg/dbs/${datname}`;
-      navigate(db_page_url.toString());
-    }
-  }, [mutation]);
+  // useEffect(() => {
+  //   if (isString(mutation_error) || mutation.isError) {
+  //     hotToast({
+  //       title: "Error",
+  //       description: mutation_error,
+  //       type: "error",
+  //     });
+  //   }
+  //   if (mutation.isSuccess) {
+  //     hotToast({
+  //       title: "Success",
+  //       description: mutation.data?.data ?? "",
+  //       type: "success",
+  //     });
+  //     db_page_url.pathname = `/pg/${datname}`;
+  //     navigate(db_page_url.toString());
+  //   }
+  // }, [mutation]);
 
   return (
     <Dialog>
@@ -190,9 +190,28 @@ export function PickDatabaseDialog({
               mutation.isLoading
             }
             onClick={() => {
-              if (isString(input.user) || isString(input.password)) {
-                mutation.mutate({ datname, input });
-              }
+         
+                mutation.mutateAsync({ datname, input }).then((res) => {
+                  console.log(" ==== pick db  res ==== ", res);
+                      if (isString(mutation_error) || mutation.isError) {
+                        hotToast({
+                          title: "Error",
+                          description: mutation_error,
+                          type: "error",
+                        });
+                      }
+                      if (res?.data) {
+                        hotToast({
+                          title: "Success",
+                          description: mutation.data?.data ?? "",
+                          type: "success",
+                        });
+                        db_page_url.pathname = `/pg/${datname}`;
+                        console.log(" === picking database db_page_url === ", db_page_url);
+                        navigate(db_page_url.toString());
+                      }
+                })
+              
             }}
           >
             Login{" "}

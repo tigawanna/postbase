@@ -16,9 +16,13 @@ export function Databases({}: DatabasesProps) {
         return { result: null, error: "no config" };
       }
       const sql = postgresInstance(config);
+            console.log(
+              " =================== slq.options.database databese section  ==== ",
+              sql.options.database,
+            );
       if (config.local_or_remote === "remote") {
         return {
-          result: { redirect: `/pg/dbs/${sql.options.database}` },
+          result: { redirect: `/pg/${sql.options.database}` },
           error: null,
         };
       }
@@ -48,7 +52,7 @@ export function Databases({}: DatabasesProps) {
   return (
     <div className="w-full h-full flex flex-col gap-5 ">
       <h1 className="text-3xl font-bold text-center w-full ">Databases</h1>
-      {/* {error && (
+      {error && (
         <div
           className="h-full w-full flex flex-col justify-center items-center gap-5 
          ">
@@ -56,7 +60,7 @@ export function Databases({}: DatabasesProps) {
             {error}
           </h1>
         </div>
-      )} */}
+      )}
       {dbs && dbs.length > 0 && (
         <div className="w-full min-h-[70vh] md:min-h-[40vh]  flex overflow-auto pb-5">
           <ul className="w-full  flex flex-wrap gap-2  px-4">

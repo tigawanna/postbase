@@ -1,5 +1,4 @@
 import { useSSQ } from "rakkasjs";
-import fs from "fs/promises";
 import { pascal } from "radash";
 import { codeToHtml } from "shikiji";
 import { getTextFromFileWithImports } from "@/utils/helpers/fs";

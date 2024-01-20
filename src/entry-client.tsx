@@ -1,10 +1,6 @@
 /* eslint-disable no-var */
 import { startClient } from "rakkasjs";
 
-import { parse, serialize } from "cookie-es";
-import { safeDestr } from "destr";
-import { DbAuthProps } from "./lib/pg/pg";
-
 startClient({
   hooks: {
     wrapApp(app) {

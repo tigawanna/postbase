@@ -73,7 +73,7 @@ table_url.searchParams.set("column", checked_column);
         <DialogFooter>
           <Button
             onClick={() => {
-              table_url.pathname = `/pg/dbs/${db_name}/${table_name}`;
+              table_url.pathname = `/pg/${db_name}/${table_name}`;
               table_url.searchParams.set("column", checked_column);
               navigate(table_url.toString());
             }}

@@ -1,4 +1,3 @@
-import postgres from "postgres";
 import { Redirect, useSSQ } from "rakkasjs";
 import { PickTableColumnDialog } from "./PickTableColumn";
 import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
@@ -6,17 +5,14 @@ import { safeDestr } from "destr";
 
 interface OneDatabaseProps {
   db_name: string;
-
 }
 
-export function OneDatabase({
-  db_name,
-
-}: OneDatabaseProps) {
+export function OneDatabase({ db_name }: OneDatabaseProps) {
   const query = useSSQ(async (ctx) => {
+    console.log("This is a one database ", db_name);
     try {
-    const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
-      const sql = postgresInstance(config)
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
+      const sql = postgresInstance(config);
       const tables = (await sql`
         SELECT table_name,
     (SELECT string_agg(column_name, ', ')
@@ -37,23 +33,25 @@ export function OneDatabase({
           column_types: string;
         },
       ];
-
+      console.log(" === tables == ", tables[0]);
       return { tables, error: null };
     } catch (error: any) {
-      // console.log(" === error == ", error.message);
+      console.log(" === error == ", error.message);
       return { tables: null, error: error.message };
     }
   });
 
   if (query.data.error) {
-    return <Redirect href="/pg/dbs" />;
+    return <Redirect href="/pg" />;
   }
 
-  if (query.data?.tables&&query.data?.tables?.length<1) {
+  if (query.data?.tables && query.data?.tables?.length < 1) {
     return (
       <div className="w-full h-full flex flex-col  items-center  relative gap-2 ">
         <div className="text-4xl font-bold p-2 absolute top-5">{db_name}</div>
-        <div className="bg-base-300 rounded-lg absolute top-[40%] p-5">No records yet</div>
+        <div className="bg-base-300 rounded-lg absolute top-[40%] p-5">
+          No records yet
+        </div>
       </div>
     );
   }
