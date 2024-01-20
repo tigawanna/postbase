@@ -2,6 +2,7 @@ import { useSSQ } from "rakkasjs";
 import fs from "fs/promises";
 import { pascal } from "radash";
 import { codeToHtml } from "shikiji";
+import { getTextFromFileWithImports } from "@/utils/helpers/fs";
 
 interface OneTableColmunTyoesProps {
   db_table: string;
@@ -20,20 +21,28 @@ export function OneTableColmunTyoes({ db_table }: OneTableColmunTyoesProps) {
       //     outputPath:"pg"
 
       // })
-      const list_of_files = await fs.readdir("pg/public");
-      console.log(" === list of files === ", list_of_files);
-      const types = await fs.readFile(
+
+      // const types = await fs.readFile(
+      //   "pg/public/" + pascal(db_table) + ".ts",
+      //   "utf-8",
+      // );
+      // console.log(" === types  ==== ", types);
+      const all_types = await getTextFromFileWithImports(
         "pg/public/" + pascal(db_table) + ".ts",
-        "utf-8",
+        "",
       );
 
-      console.log(" === types  ==== ", types);
-      const html = await codeToHtml(types, {
+      if (!all_types) {
+        return { types: null, html: null, error: null };
+      }
+
+      // console.log(" === readTextFromFileWithImports types  ==== ", all_types);
+      const html = await codeToHtml(all_types, {
         lang: "typescript",
         theme: "catppuccin-mocha",
       });
-      console.log({ html });
-      return { types: types, html, error: null };
+      // console.log({ html });
+      return { types: all_types, html, error: null };
     } catch (error: any) {
       return { types: null, error: error.message };
     }
@@ -41,12 +50,15 @@ export function OneTableColmunTyoes({ db_table }: OneTableColmunTyoesProps) {
   //   console.log(" =========== query.data =========== ", query.data);
 
   if (!query.data?.html) {
-    return null;
+    return (
+      <div className="w-full h-full flex flex-col gap-3 items-center justify-center ">
+        <div className="p-10 rounded-lg bg-base-200">no types found</div>
+      </div>
+    );
   }
   return (
-    <div className="w-full h-full flex flex-col gap-3 items-center justify-center ">
-      <h1 className="text-2xl font-bold">do type generation here</h1>
-      <div className="p-10 rounded-lg bg-base-200">
+    <div className="w-full max-h-[80vh] overflow-auto">
+      <div className="">
         <code dangerouslySetInnerHTML={{ __html: query.data?.html }}></code>
       </div>
     </div>

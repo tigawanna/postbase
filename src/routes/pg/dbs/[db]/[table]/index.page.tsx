@@ -41,14 +41,14 @@ export default function OneTablePage({ params, url }: PageProps) {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col ">
+    <div className="w-full h-screen flex flex-col overflow-auto ">
       {/* <OneTableRowsOffsetPages
         db_name={db_name}
         db_table={db_table}
         db_primary_column={db_primary_column}
       /> */}
 
-      <Tabs defaultValue="list" className="w-full">
+      <Tabs defaultValue="types" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="list">List</TabsTrigger>
           <TabsTrigger value="types">Types</TabsTrigger>
