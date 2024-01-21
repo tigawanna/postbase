@@ -36,7 +36,6 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   });
   const query = useSSQ(async (ctx) => {
     try {
-      // console.log(" === input  === ", input);
       const sql = postgres({
         host: input.db_host,
         user: input.db_user,
@@ -51,8 +50,6 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       const users = (await sql`SELECT * FROM pg_catalog.pg_user`) as any as [
         { usename: string },
       ];
-      // console.log(" === databases == ", database);
-      // console.log(" === users == ", users);
       return { result: { database, users }, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);
@@ -71,21 +68,16 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
       const database = (await sql`SELECT datname FROM pg_database`) as any as [
         { datname: string },
       ];
-
       setPGCookie(ctx, JSON.stringify(vars));
-      // qc.setQueryData("pg_config", vars)
       return { result: { succes: true, config: vars, database }, error: null };
     } catch (error: any) {
-      // console.log(" === local postgres connection error == ", error.message);
-      // ctx?.deleteCookie("pg_config");
       deletePGCookie(ctx);
       return { result: null, error: error.message };
     }
   });
 
-  // console.log(" ===== local db connection muation data === ", mutation.data);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInput({
       ...input,
       [e.target.id]: e.target.value,
@@ -95,13 +87,7 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
   const dbs = query?.data?.result?.database;
   const users = query?.data?.result?.users;
 
-  // if (mutation.data?.result?.succes) {
-  //   // qc.setQueryData("pg_config", mutation.data?.result?.config)
-  //   const redirect_search_param = page_ctx.url.searchParams.get("redirect");
-  //   // console.log(" ===== login success , rdirecting to ==== ", redirect_search_param);
-  //   const redirect_to = redirect_search_param ?? "/";
-  //   return <Redirect href={redirect_to} />;
-  // }
+
   return (
     <div className="w-full h-full  overflow-auto">
       <Card className="w-full">

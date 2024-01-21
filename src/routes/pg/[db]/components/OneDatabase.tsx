@@ -9,7 +9,7 @@ interface OneDatabaseProps {
 
 export function OneDatabase({ db_name }: OneDatabaseProps) {
   const query = useSSQ(async (ctx) => {
-    console.log("This is a one database ", db_name);
+    // console.log("This is a one database ", db_name);
     try {
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
      if (!config || !config?.local_or_remote) {
@@ -63,7 +63,7 @@ export function OneDatabase({ db_name }: OneDatabaseProps) {
   }
   // console.log(" ===== query.tables  ======= ", query.data.tables);
   return (
-    <div className="w-full flex flex-col  items-center gap-2 overflow-y-scroll h-screen">
+    <div className="w-full flex flex-col  items-center gap-2 overflow-y-scroll h-full">
       <div className="text-4xl font-bold p-2">{db_name}</div>
       <div className="w-full h-full flex flex-col  items-center  gap-2 mt-[10%]">
         <div className="w-full flex flex-wrap items-center justify-center gap-2 px-2 pb-8">
