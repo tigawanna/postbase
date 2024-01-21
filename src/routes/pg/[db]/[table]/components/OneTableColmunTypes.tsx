@@ -4,7 +4,7 @@ import { codeToHtml } from "shikiji";
 import { getTextFromFileWithImports } from "@/utils/helpers/fs";
 import { CopyToClipBoard } from "@/components/form/copy";
 import { existsSync } from "fs";
-import { GenerateTableTypesDialog } from "./GenerateTypesDialog";
+
 import kanel from "kanel";
 import { DbAuthProps, postgresInstance } from "@/lib/pg/pg";
 import { safeDestr } from "destr";
@@ -33,6 +33,7 @@ export function OneTableColmunTypes({
       const all_types = await getTextFromFileWithImports(
         "pg/" + db_name + "/public/" + pascal(db_table) + ".ts",
         "",
+        db_name,
       );
 
       if (!all_types) {
@@ -99,20 +100,28 @@ export function OneTableColmunTypes({
           className="gap-3"
           onClick={() => {
             generate_types_mutation.mutateAsync().then((res) => {
-              if(res.error){
+              if (res.error) {
                 hotToast({
                   title: "Error generating types",
                   description: res.error,
                   type: "error",
-
-                })
+                });
               }
-            })
+              hotToast({
+                title: "Types generated",
+                description: "types for this databese created",
+                type: "success",
+              });
+              query.refetch();
+            });
           }}
         >
-          Generate types {generate_types_mutation.isLoading
-            ? <Loader className="animate-spin" />
-            : <CloudCog />}
+          Generate types{" "}
+          {generate_types_mutation.isLoading ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <CloudCog />
+          )}
         </Button>
       </div>
     );
@@ -138,7 +147,7 @@ export function OneTableColmunTypes({
           text={query.data?.types}
           className="sticky top-0 right-5 w-fit"
         />
-        <div className="w-full flex flex-col ">
+        <div className="w-full flex flex-col px-4 ">
           <code dangerouslySetInnerHTML={{ __html: query.data?.html }}></code>
         </div>
       </div>
