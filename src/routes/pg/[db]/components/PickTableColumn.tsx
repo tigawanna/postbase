@@ -41,8 +41,8 @@ table_url.searchParams.set("column", checked_column);
           <DialogTitle className="text-xl">{table_name}</DialogTitle>
 
           <DialogDescription className="brightness-75">
-            Pick a column that will be used as the primary key and pagination
-            cursor , Primary id or create a are the most commonly used for this
+            Pick a column that will be used as the primary sorting field,
+             Primary id or createat are the most commonly used
           </DialogDescription>
         </DialogHeader>
 

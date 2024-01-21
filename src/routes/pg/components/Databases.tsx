@@ -48,8 +48,8 @@ export function Databases({}: DatabasesProps) {
   }
 
   return (
-    <div className="w-full h-full overflow-auto   ">
-      <h1 className="text-3xl font-bold text-center w-full sticky top-1">
+    <div className="w-full h-full overflow-auto flex flex-col gap-4   ">
+      <h1 className="text-3xl font-bold text-center w-full ">
         Databases
       </h1>
       {error && (

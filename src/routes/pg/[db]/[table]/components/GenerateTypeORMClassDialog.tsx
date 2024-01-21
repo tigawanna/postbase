@@ -18,15 +18,16 @@ import { safeDestr } from "destr";
 
 import pkg from "kanel";
 const { processDatabase } = pkg;
-interface GenerateTableTypesDialogProps {
+interface GenerateTableTypeORMClassDialogProps {
   db_name: string;
   db_table: string;
+  ts_types:string;
 }
 
-export function GenerateTableTypesDialog({
+export function GenerateTableTypeORMClassDialog({
   db_name,
   db_table,
-}: GenerateTableTypesDialogProps) {
+}: GenerateTableTypeORMClassDialogProps) {
   const mutation = useSSM(async (ctx, vars) => {
     try {
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
