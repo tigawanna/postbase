@@ -17,7 +17,7 @@ interface OneTableColmunTyoesProps {
   db_name: string;
 }
 
-export function OneTableColmunTyoes({
+export function OneTableColmunTypes({
   db_table,
   db_name,
 }: OneTableColmunTyoesProps) {

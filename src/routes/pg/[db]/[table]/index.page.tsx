@@ -5,7 +5,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn/ui/tabs";
-import { OneTableColmunTyoes } from "./components/OneTableColmunTyoes";
+import { OneTableColmunTypes } from "./components/OneTableColmunTypes";
 import { OneTableRowsOffsetPages } from "./components/OneTableRowsOffsetPages";
 import { hotToast } from "@/utils/helpers/toast";
 import { useState, useTransition } from "react";
@@ -75,7 +75,7 @@ export default function OneTablePage({ params, url }: PageProps) {
           />
         </TabsContent>
         <TabsContent value="types">
-          <OneTableColmunTyoes db_table={db_table} db_name={db_name} />
+          <OneTableColmunTypes db_table={db_table} db_name={db_name} />
         </TabsContent>
       </Tabs>
     </div>
