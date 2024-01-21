@@ -47,6 +47,7 @@ export default function OneTablePage({ params, url }: PageProps) {
       description: error_message(),
       type: "error",
       position: "bottom-center",
+      duration:4000
     })
     const redirect_url = url;
     redirect_url.pathname = `pg/${db_name}`;

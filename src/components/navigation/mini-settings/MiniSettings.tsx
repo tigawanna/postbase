@@ -28,6 +28,10 @@ export function MiniSettingsModal({}: MiniSettingsModalProps) {
     try {
       const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
       const sql = postgresInstance(config);
+          if (!sql) {
+            return { result: null, error: "no config" };
+          }
+
       const options = {
         user: sql?.options?.user,
         host: sql?.options?.host,
@@ -43,6 +47,10 @@ export function MiniSettingsModal({}: MiniSettingsModalProps) {
   const mutation = useSSM(async (ctx, vars: { config: DbAuthProps }) => {
     try {
       const sql = postgresInstance(vars.config);
+          if (!sql) {
+            return { result: null, error: "no config" };
+          }
+
       await sql.end();
       ctx.deleteCookie("pg_config", {
         path: "/",

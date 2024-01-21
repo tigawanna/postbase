@@ -15,12 +15,11 @@ import postgres from "postgres";
 import {
   useSSQ,
   useSSM,
-  Redirect,
   usePageContext,
   useQueryClient,
   navigate,
 } from "rakkasjs";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { Button } from "@/components/shadcn/ui/button";
 import { LocalDBAuthProps, deletePGCookie, setPGCookie } from "@/lib/pg/pg";
 
@@ -196,6 +195,7 @@ export function LocalDBAuthForm({}: LocalDBAuthFormProps) {
                   const redirect_search_param =
                     page_ctx.url.searchParams.get("redirect");
                   const redirect_to = redirect_search_param ?? "/";
+                  console.log(" ===== login success , redirecting to ==== ",redirect_to)
                   navigate(redirect_to);
                 }
               });

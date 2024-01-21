@@ -10,7 +10,7 @@ export default function ErrorBoundaryComponent({ children }: ErrorBoundaryCompon
       fallbackRender={({ error, resetErrorBoundary }: 
         { error: Error; resetErrorBoundary: () => void }) => {
           return (
-            <div className="w-full h-full min-h-screen flex flex-col gap-5 justify-center items-center">
+            <div className="w-full  flex flex-col gap-5 justify-center items-center">
               <h1 className="text-2xl text-error">Something went wrong</h1>
            
               <p className="p-5 text-error bg-error/10 rounded-lg">

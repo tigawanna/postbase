@@ -15,7 +15,7 @@ export default function OneTableTypesPage({ params, url }: PageProps) {
     //     db_password,
     //   });
     const redirect_url = url;
-    redirect_url.pathname = `pg/dbs/${db_name}`;
+    redirect_url.pathname = `pg/${db_name}`;
     return <Redirect href={redirect_url.toString()} />;
   }
   return (

@@ -1,7 +1,7 @@
 import postgres from "postgres";
 import { RequestContext } from "rakkasjs";
 
-export function postgresInstance(options: DbAuthProps) {
+export function postgresInstance(options?: DbAuthProps) {
   if(!options){
     return
   }

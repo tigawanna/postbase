@@ -8,12 +8,13 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
   const pg_config = ctx.queryClient.getQueryData(
     "pg_config",
   ) as DbAuthProps | null;
-  
+
+  // console.log("===== pg route page_guard ========= ", ctx.url);
   if (!pg_config) {
     const new_url = new URL(ctx.url)
     new_url.pathname = "/auth";
-    new_url.searchParams.set("redirect", ctx.url.pathname);
-    console.log("   ====  test_config not found  ===== ")
+    new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
+    console.log("   ====  pg_config not found in pg route guard  ===== ")
     return {
       redirect: new_url.toString(),
     };
@@ -24,7 +25,7 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
     if (user.connection_url == null) {
       const new_url = new URL(ctx.url)
       new_url.pathname = "/auth";
-      new_url.searchParams.set("redirect", ctx.url.pathname);
+      new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
       return {
         redirect: new_url.toString(),
       };
@@ -39,7 +40,7 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
     ) {
       const new_url = new URL(ctx.url)
       new_url.pathname = "/auth";
-      new_url.searchParams.set("redirect", ctx.url.pathname);
+      new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
       return {
         redirect: new_url.toString(),
       };

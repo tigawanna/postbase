@@ -10,7 +10,7 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
   if (!pg_config) {
     const new_url = new URL(ctx.url);
     new_url.pathname = "/auth";
-    new_url.searchParams.set("redirect", ctx.url.pathname);
+    new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
     console.log("   ==== test auth guard pg_config not found  ===== ");
     return {
       redirect: new_url.toString(),
@@ -22,7 +22,7 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
     if (user.connection_url == null) {
       const new_url = new URL(ctx.url);
       new_url.pathname = "/auth";
-      new_url.searchParams.set("redirect", ctx.url.pathname);
+      new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
       return {
         redirect: new_url.toString(),
       };
@@ -37,7 +37,7 @@ export function pageGuard(ctx: PageContext): LookupHookResult {
     ) {
       const new_url = new URL(ctx.url);
       new_url.pathname = "/auth";
-      new_url.searchParams.set("redirect", ctx.url.pathname);
+      new_url.searchParams.set("redirect", ctx.url.pathname + ctx.url.search);
       return {
         redirect: new_url.toString(),
       };
