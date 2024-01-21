@@ -36,7 +36,7 @@ table_url.searchParams.set("column", checked_column);
 
         {/* <Button variant="outline">Open</Button> */}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[90dvh] overflow-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">{table_name}</DialogTitle>
 

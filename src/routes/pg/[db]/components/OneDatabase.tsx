@@ -45,7 +45,7 @@ export function OneDatabase({ db_name }: OneDatabaseProps) {
       console.log(" === error == ", error.message);
       return { tables: null, error: error.message };
     }
-  });
+  },{key:db_name});
 
   if (query.data.error) {
     return <Redirect href="/pg" />;
