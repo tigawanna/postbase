@@ -75,7 +75,7 @@ export default function OneTablePage({ params, url }: PageProps) {
           />
         </TabsContent>
         <TabsContent value="types">
-          <OneTableColmunTyoes db_table={db_table} />
+          <OneTableColmunTyoes db_table={db_table} db_name={db_name} />
         </TabsContent>
       </Tabs>
     </div>

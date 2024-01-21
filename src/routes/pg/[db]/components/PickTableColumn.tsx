@@ -28,10 +28,7 @@ useEffect(() => {
 table_url.searchParams.set("column", checked_column);
 }, [checked_column]);
 
-// console.log(">>>>>>>>>>>>>>>>>>>>>>>")
-// console.log(" === table === ",table_name)
-// console.log(" === checked == ", checked_column);
-// console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
   return (
     <Dialog>
       <DialogTrigger asChild>

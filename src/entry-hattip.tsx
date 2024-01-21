@@ -4,7 +4,7 @@ import { safeDestr } from "destr";
 import { DbAuthProps } from "./lib/pg/pg";
 
 export async function pgConfigCheck(ctx: RequestContext<unknown>) {
-  const pg_config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+  const pg_config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
   if (!pg_config) {
     return {
       redirect: "/auth/",

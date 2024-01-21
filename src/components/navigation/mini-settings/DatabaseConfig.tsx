@@ -20,7 +20,7 @@ export function DatabaseConfig({}: DatabaseEmailProps) {
 
   const query = useSSQ((ctx) => {
     try {
-      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
       const sql = postgresInstance(config);
       const options = {
         user: sql?.options?.user,

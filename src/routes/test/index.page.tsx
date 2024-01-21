@@ -1,14 +1,12 @@
 import { Button } from "@/components/shadcn/ui/button";
-import { DbAuthProps, deletePGCookie, postgresInstance } from "@/lib/pg/pg";
+import { deletePGCookie } from "@/lib/pg/pg";
 import { Loader } from "lucide-react";
-import postgres from "postgres";
+
 import {
   PageProps,
-  Redirect,
   navigate,
   useQueryClient,
   useSSM,
-  useSSQ,
 } from "rakkasjs";
 export default function TestPage({ url }: PageProps) {
   const qc = useQueryClient();
@@ -24,13 +22,7 @@ export default function TestPage({ url }: PageProps) {
       return { success: false, error: error.message };
     }
   });
-  // if(mutation.data?.success){
-  //   const new_url = new URL(url)
-  //   new_url.pathname = "/auth"
-  //   // console.log(" ====== new url ============ ",url)
-  //   new_url.searchParams.set("redirect", url.pathname)
-  //   return <Redirect href={new_url.toString()}/>
-  // }
+
   return (
     <div className="w-full h-full min-h-screen flex items-center justify-center">
       <p>test page</p>

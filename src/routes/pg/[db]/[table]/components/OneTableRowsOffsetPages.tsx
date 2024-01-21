@@ -165,7 +165,7 @@ export function OneTableRowsOffsetpagesPaginator({
   const query = useSSQ(async (ctx) => {
     try {
       const offset = (2 - 1) * 10;
-      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
           if (!config || !config?.local_or_remote) {
             return { rows: null, error: "no config" };
           }

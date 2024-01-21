@@ -26,7 +26,7 @@ export function MiniSettingsModal({}: MiniSettingsModalProps) {
 
   const query = useSSQ((ctx) => {
     try {
-      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_config);
+      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
       const sql = postgresInstance(config);
           if (!sql) {
             return { result: null, error: "no config" };

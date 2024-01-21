@@ -25,7 +25,7 @@ export async function post(ctx: RequestContext) {
         { datname: string },
       ];
       console.log(" === succesfull local postgres connection == ", database);
-      ctx?.setCookie("pg_config", JSON.stringify(input));
+      ctx?.setCookie("pg_cookie", JSON.stringify(input));
       const res = { result: { database }, error: null };
       return json(res);
     }
@@ -59,7 +59,7 @@ export async function post(ctx: RequestContext) {
       { datname: string },
     ];
     console.log(" === succesfull local postgres connection == ", database);
-    ctx?.setCookie("pg_config", JSON.stringify(input));
+    ctx?.setCookie("pg_cookie", JSON.stringify(input));
     const res = { result: { database }, error: null };
     return json(res);
   } catch (error: any) {
