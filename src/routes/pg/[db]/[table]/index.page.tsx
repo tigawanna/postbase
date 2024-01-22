@@ -5,10 +5,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn/ui/tabs";
-import { OneTableColmunTypes } from "./components/OneTableColmunTypes";
+import { OneTableColmumnTypes } from "./components/OneTableColmumnTypes";
 import { OneTableRowsOffsetPages } from "./components/OneTableRowsOffsetPages";
 import { hotToast } from "@/utils/helpers/toast";
 import { useState, useTransition } from "react";
+import { OneTypeORMTypeGraphqlTypes } from "./components/OneTypeORMTypeGraphqlTypes";
 
 export default function OneTablePage({ params, url }: PageProps) {
   const db_name = params.db;
@@ -41,7 +42,7 @@ export default function OneTablePage({ params, url }: PageProps) {
       }
       return `missing fields ${missiing_fields.join(",")}`
     }
-    console.log(" ==== one table missing params redirecting  === ", error_message())
+    // console.log(" ==== one table missing params redirecting  === ", error_message())
     hotToast({
       title: "Error loading table",
       description: error_message(),
@@ -56,16 +57,16 @@ export default function OneTablePage({ params, url }: PageProps) {
 
   return (
     <div className="w-full h-screen flex flex-col overflow-auto ">
-      {/* <OneTableRowsOffsetPages
-        db_name={db_name}
-        db_table={db_table}
-        db_primary_column={db_primary_column}
-      /> */}
-
-      <Tabs defaultValue={currenttab} value={currenttab}  onValueChange={updtaeCurrentTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="list">List</TabsTrigger>
+      <Tabs
+        defaultValue={currenttab}
+        value={currenttab}
+        onValueChange={updtaeCurrentTab}
+        className="w-full"
+      >
+        <TabsList className="grid w-full  gap-2 grid-cols-3">
+          <TabsTrigger className="" value="list">List</TabsTrigger>
           <TabsTrigger value="types">Types</TabsTrigger>
+          <TabsTrigger value="typeorm">TypeORM + TypeGraphQL</TabsTrigger>
         </TabsList>
         <TabsContent value="list">
           <OneTableRowsOffsetPages
@@ -75,7 +76,10 @@ export default function OneTablePage({ params, url }: PageProps) {
           />
         </TabsContent>
         <TabsContent value="types">
-          <OneTableColmunTypes db_table={db_table} db_name={db_name} />
+          <OneTableColmumnTypes db_table={db_table} db_name={db_name} />
+        </TabsContent>
+        <TabsContent value="typeorm">
+          <OneTypeORMTypeGraphqlTypes db_table={db_table} db_name={db_name} />
         </TabsContent>
       </Tabs>
     </div>

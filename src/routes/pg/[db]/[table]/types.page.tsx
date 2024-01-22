@@ -1,5 +1,5 @@
 import { PageProps, Redirect } from "rakkasjs";
-import { OneTableColmunTyoes } from "./components/OneTableColmunTypes";
+import { OneTableColmunTyoes } from "./components/OneTableColmumnTypes";
 export default function OneTableTypesPage({ params, url }: PageProps) {
   const db_name = params.db;
   const db_table = params.table;

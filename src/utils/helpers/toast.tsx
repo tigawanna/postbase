@@ -11,7 +11,7 @@ interface hotToastPrps {
   type: "success" | "error" | "info" | "warning";
 }
 
-export function hotToast({ description, title, type,position,duration=2000 }: hotToastPrps) {
+export function hotToast({ description, title, type,position,duration=5000 }: hotToastPrps) {
   const toastVariants = cva(["border"], {
     variants: {
       type: {
