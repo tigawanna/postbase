@@ -32,11 +32,7 @@ export function OneTableRowsOffsetPages({
         if (!sql) {
           return { rows: null, error: "no config" };
         }
-        // console.log(" === OneTableRowsOffsetPages variables  == ", {
-        //   db_table,
-        //   db_primary_column,
-        //   offset,
-        // });
+
         const rows = (await sql`
       SELECT * from ${sql(db_table)} 
       ORDER BY ${sql(db_primary_column)}

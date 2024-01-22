@@ -9,6 +9,7 @@ An attempt at a Nodejs based PostgresSQL GUI
 - have a running Postgres server
 - make sure you have a default Postgres with the settings
 
+
  ```ts
 postgres({
         host: "localhost",
@@ -17,6 +18,9 @@ postgres({
         database: "postgres",
       })
  ```
+
+ Connection url can be used but types generation only works on local database
+
  ```sh 
   npm install
   npm run dev
