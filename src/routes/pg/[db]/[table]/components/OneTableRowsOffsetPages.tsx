@@ -84,8 +84,8 @@ export function OneTableRowsOffsetPages({
   if (query.data.error) {
     const redirect_url = page_ctx.url;
     redirect_url.pathname = `pg/${db_name}`;
-    console.log("error loading table === ", query.data.error);
-    console.log("redirecting to ", redirect_url.toString());
+    // console.log("error loading table === ", query.data.error);
+    // console.log("redirecting to ", redirect_url.toString());
     return <Redirect href={redirect_url.toString()} />;
   }
 

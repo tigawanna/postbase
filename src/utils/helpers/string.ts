@@ -32,3 +32,21 @@ export function wordToNumber(word: string): number {
 
   return sum % 991 + 10; // 991 is a prime number close to 1000
 }
+
+export function trimOutCodeBlock(input: string) {
+  const codeBlockStart = "```typescript";
+  const codeBlockEnd = "```";
+  const startIndex = input.indexOf(codeBlockStart);
+  const endIndex = input.indexOf(
+    codeBlockEnd,
+    startIndex + codeBlockStart.length,
+  );
+  if (startIndex !== -1 && endIndex !== -1) {
+    return (
+      input.slice(0, startIndex) +
+      input.slice(endIndex + codeBlockEnd.length)
+    );
+  } else {
+    return input;
+  }
+}

@@ -108,12 +108,15 @@ export function OneTableColmumnTypes({
                   type: "error",
                 });
               }
-              hotToast({
-                title: "Types generated",
-                description: "types for this databese created",
-                type: "success",
-              });
-              query.refetch();
+              if(res.success){
+                hotToast({
+                  title: "Types generated",
+                  description: "types for this databese created",
+                  type: "success",
+                });
+                query.refetch();
+
+              }
             });
           }}
         >

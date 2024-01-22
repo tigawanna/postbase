@@ -88,24 +88,8 @@ export function PickDatabaseDialog({
   const mutation_error = mutation.data?.error || mutation.error;
   const page_ctx = usePageContext();
   const db_page_url = new URL(page_ctx.url);
-  // useEffect(() => {
-  //   if (isString(mutation_error) || mutation.isError) {
-  //     hotToast({
-  //       title: "Error",
-  //       description: mutation_error,
-  //       type: "error",
-  //     });
-  //   }
-  //   if (mutation.isSuccess) {
-  //     hotToast({
-  //       title: "Success",
-  //       description: mutation.data?.data ?? "",
-  //       type: "success",
-  //     });
-  //     db_page_url.pathname = `/pg/${datname}`;
-  //     navigate(db_page_url.toString());
-  //   }
-  // }, [mutation]);
+
+
 
   return (
     <Dialog>
@@ -175,12 +159,7 @@ export function PickDatabaseDialog({
           </div>
         </form>
         <DialogFooter>
-          {/* <Link
-            href={db_page_url.toString()}
-            className=" rounded-lg px-5 py-1.5 bg-base-200 hover:bg-base-300 hover:text-sky-400 "
-          >
-            continue
-          </Link> */}
+   
           <Button
             className="rounded-lg px-5 py-1.5 bg-base-200 hover:bg-base-300 hover:text-sky-400 
             flex gap-4 place-content-center"
@@ -192,7 +171,7 @@ export function PickDatabaseDialog({
             onClick={() => {
          
                 mutation.mutateAsync({ datname, input }).then((res) => {
-                  console.log(" ==== pick db  res ==== ", res);
+                  // console.log(" ==== pick db  res ==== ", res);
                       if (isString(mutation_error) || mutation.isError) {
                         hotToast({
                           title: "Error",

@@ -13,6 +13,7 @@ import { Loader, CloudCog } from "lucide-react";
 import { generateTypeORMTypeGrapQLClass } from "./api/generateTypeORMTypeGrapQLClass";
 import { useSSM } from "rakkasjs";
 import { CopyToClipBoard } from "@/components/form/copy";
+import { trimOutCodeBlock } from "@/utils/helpers/string";
 interface OneTypeORMTypeGraphqlTypesProps {
   db_table: string;
   db_name: string;
@@ -81,7 +82,10 @@ const types_class_path =
       if (!table_types_class) {
         return { success: false, error: "error generating types class" };
       }
-      await writeFile(types_class_path, table_types_class, "utf8");
+      const fixed_output = trimOutCodeBlock(table_types_class);
+      // if(table_types_class)
+      await writeFile(types_class_path, fixed_output, "utf8");
+
     //   query.refetch();
     return { success: true, error: null };
     } catch (error: any) {
@@ -103,7 +107,7 @@ const types_class_path =
           className="gap-3"
           onClick={() => {
             generate_types_class_mutation.mutateAsync().then((res) => {
-                console.log("==== res =====",res);
+                // console.log("==== res =====",res);
               if (res.error) {
                 hotToast({
                   title: "Error generating types",
@@ -111,12 +115,15 @@ const types_class_path =
                   type: "error",
                 });
               }
-              hotToast({
-                title: "Types generated",
-                description: "types class generated",
-                type: "success",
-              });
-              query.refetch();
+              if(res.success){
+                hotToast({
+                  title: "Types generated",
+                  description: "types class generated",
+                  type: "success",
+                });
+                query.refetch();
+
+              }
             });
           }}
         >

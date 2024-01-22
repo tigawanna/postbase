@@ -44,14 +44,11 @@ export async function generateTypeORMTypeGrapQLClass(input:string) {
 
     const parts = [
       {
-        text: `Given the typescript interface 
-        ${input}
-        generate typescript class with TypeORM and Type-GraphQL annotations 
-        make sure it's only one class per interface ,
-         also ensure every unique interface gets its own class 
-         with with TypeORM and Type-GraphQL annotations 
-         you are forbidden from using markdown syntax in the response
-         `,
+        text: `Given the TypeScript interface ${input} 
+        generate a TypeScript class with TypeORM and Type-GraphQL annotations.
+         Ensure that it's only one class per interface, 
+         and every unique interface gets its own class with TypeORM and Type-GraphQL annotations.
+          Additionally, you are forbidden from using markdown syntax or wrapping the output in a code block.`
       },
     ];
     const result = await model.generateContent({
@@ -61,10 +58,10 @@ export async function generateTypeORMTypeGrapQLClass(input:string) {
     });
 
     const response = result.response;
-    console.log(
-        "====== generateTypeORMTypeGrapQLClass response ======",
-      response,JSON.stringify(response)
-      );
+    // console.log(
+    //     "====== generateTypeORMTypeGrapQLClass response ======",
+    //   response,JSON.stringify(response)
+    //   );
     const response_text = response.text();
       console.log(
           "====== generateTypeORMTypeGrapQLClass response text ======",
