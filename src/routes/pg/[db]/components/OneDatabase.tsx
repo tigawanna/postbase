@@ -39,7 +39,7 @@ export function OneDatabase({ db_name }: OneDatabaseProps) {
           column_types: string;
         },
       ];
-      console.log(" === tables == ", tables[0]);
+      // console.log(" === tables == ", tables[0]);
       return { tables, error: null };
     } catch (error: any) {
       console.log(" === error == ", error.message);

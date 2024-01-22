@@ -20,32 +20,40 @@ export function OneTableRowsOffsetPages({
   const table_page = parseInt(url.searchParams.get("tp") ?? "1");
   const [sortColumn, setSortColumn] = useState(db_primary_column);
   const [sortDirection, setSortDirection] = useState("");
-  const query = useSSQ(async (ctx) => {
-    try {
-      const offset = (table_page - 1) * 10;
-      const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
-      if(!config || !config?.local_or_remote) {
-        return { rows: null, error: "no config"}
-      }
-      const sql = postgresInstance(config);
-     if (!sql) {
-       return { rows: null, error: "no config" };
-     }
-      const rows = (await sql`
+  const query = useSSQ(
+    async (ctx) => {
+      try {
+        const offset = (table_page - 1) * 10;
+        const config = safeDestr<DbAuthProps>(ctx.cookie?.pg_cookie);
+        if (!config || !config?.local_or_remote) {
+          return { rows: null, error: "no config" };
+        }
+        const sql = postgresInstance(config);
+        if (!sql) {
+          return { rows: null, error: "no config" };
+        }
+        // console.log(" === OneTableRowsOffsetPages variables  == ", {
+        //   db_table,
+        //   db_primary_column,
+        //   offset,
+        // });
+        const rows = (await sql`
       SELECT * from ${sql(db_table)} 
       ORDER BY ${sql(db_primary_column)}
       OFFSET ${offset}
       LIMIT 10`) as any as [{ [key: string]: any }];
-        // console.log(" === tabless == ", rows);
-      return { rows, error: null };
-    } catch (error: any) {
-      console.log(
-        " === useSSQ OneTableRowsOffsetPages error == ",
-        error.message,
-      );
-      return { rows: null, error: error.message };
-    }
-  },{key: `${db_name}/${db_table}`});
+        // console.log(" === tabless == ", {db_table, db_primary_column, offset, rows});
+        return { rows, error: null };
+      } catch (error: any) {
+        console.log(
+          " === useSSQ OneTableRowsOffsetPages error == ",
+          error.message,
+        );
+        return { rows: null, error: error.message };
+      }
+    },
+    { key: `${db_name}/${db_table}` },
+  );
 
   const rows = query.data.rows;
 
@@ -76,6 +84,7 @@ export function OneTableRowsOffsetPages({
   if (query.data.error) {
     const redirect_url = page_ctx.url;
     redirect_url.pathname = `pg/${db_name}`;
+    console.log("error loading table === ", query.data.error);
     console.log("redirecting to ", redirect_url.toString());
     return <Redirect href={redirect_url.toString()} />;
   }
@@ -90,7 +99,10 @@ export function OneTableRowsOffsetPages({
   return (
     <div className="w-full h-screen overflow-auto space-y-2">
       <div className="w-full py-3 flex flex-col">
-        <OneTableRowsOffsetpagesPaginator  db_name={db_name} db_table={db_table} />
+        <OneTableRowsOffsetpagesPaginator
+          db_name={db_name}
+          db_table={db_table}
+        />
       </div>
       <table className="w-full table ">
         <thead className="sticky top-0 ">
@@ -145,7 +157,10 @@ export function OneTableRowsOffsetPages({
         </tbody>
       </table>
       <div className="w-full py-3 flex flex-col">
-        <OneTableRowsOffsetpagesPaginator db_name={db_name} db_table={db_table} />
+        <OneTableRowsOffsetpagesPaginator
+          db_name={db_name}
+          db_table={db_table}
+        />
       </div>
     </div>
   );
