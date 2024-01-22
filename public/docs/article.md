@@ -388,8 +388,9 @@ export function deletePGCookie(ctx: RequestContext<unknown>) {
 }
 ```
 
-[Full code](https://github.com/tigawanna/postbase)
 
 And with that we have a basic PostgresSQL GUI hat generates TypeORM and TypeGraphQl classes for us ,    I feel like this will come in handy soon 😏 . feel free to play with it and discover new patterns 
 
 Next step is using something like [wails](https://wails.io/) or [tauri](https://tauri.app/) or [electron](https://www.electronjs.org/) to package it into a binary for better DX
+
+[Full code](https://github.com/tigawanna/postbase)
