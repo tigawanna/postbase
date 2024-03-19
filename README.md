@@ -34,7 +34,8 @@ npm start
 
 To use the TypeORM + TypeGraphQL classes add an environment variable with your [Gemini API key](https://makersuite.google.com/app/apikey), its free for simple uses.
 
-![Demo video](https://github.com/tigawanna/postbase/blob/main/public/docs/postbase.mp4)
+
+https://github.com/tigawanna/postbase/assets/72096712/50ff037e-7364-46ec-a226-e143aa583be4
 
 The output types and classes are stored in the
 [ pg directory](pg)
